@@ -4,6 +4,7 @@
 
 class Player
 {
+public:
 	King king;
 	Queen queen;
 	Rook rook1, rook2;
