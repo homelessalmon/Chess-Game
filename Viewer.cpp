@@ -1,1 +1,125 @@
 #include "Viewer.h"
+#include <iostream>
+#include <opencv2/opencv.hpp>
+#include <string>
+#define SIZE 50
+using namespace std;
+using namespace cv;
+
+Viewer::Viewer() {
+	Screen = Mat(SIZE * 10, SIZE * 10, CV_8UC3, Scalar(200, 200, 200));
+}
+
+Point Viewer::BoradtoImg(int x, int y) {
+	Point A;
+	A.x = SIZE * (x + 1);
+	A.y = SIZE * (8 - y);
+	return A;
+}
+
+int Viewer::ImgtoBoradX(Point P) {
+	return (P.x / SIZE - 1);
+}
+
+int Viewer::ImgtoBoradY(Point P) {
+	return -(P.y / SIZE - 8);
+}
+
+bool Viewer::mergeImg(Mat& dst, Mat& src, Point location) {
+	double scale = 1.0, size = 1.0, angle = 0;
+	if (dst.channels() != 3 || src.channels() != 4 || location.x > dst.cols || location.y > dst.cols) {
+		return false;
+	}
+	Mat small_size = src.clone();
+
+	if (size != 1 || angle != 0) {
+		int width = src.cols > (dst.cols - location.x) ? (dst.cols - location.x) : src.cols;
+		int length = src.rows > (dst.rows - location.y) ? (dst.rows - location.y) : src.rows;
+		Mat rotation = getRotationMatrix2D(Point2f(length / 2, width / 2), angle, size);
+		warpAffine(small_size, small_size, rotation, Size(width, length));
+	}
+
+	Mat dst_part(dst, Rect(location.x, location.y, small_size.cols, small_size.rows));
+
+	vector<Mat>src_channels;
+	vector<Mat>dst_channels;
+	split(small_size, src_channels);
+	split(dst_part, dst_channels);
+
+	if (scale < 1) {
+		src_channels[3] *= scale;
+		scale = 1;
+	}
+	for (int i = 0; i < 3; i++) {
+		dst_channels[i] = dst_channels[i].mul(255.0 / scale - src_channels[3], scale / 255.0);
+		dst_channels[i] += src_channels[i].mul(src_channels[3], scale / 255.0);
+	}
+	merge(dst_channels, dst_part);
+	return true;
+}
+
+void Viewer::drawBoard() {
+	int thickness = 1;
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if ((i + j) % 2 == 0) {
+				rectangle(Screen, Point(SIZE * (i + 1), SIZE * (j + 1)), Point(SIZE * (i + 2), SIZE * (j + 2)), Scalar(158, 206, 255), -1);
+			}
+			else {
+				rectangle(Screen, Point(SIZE * (i + 1), SIZE * (j + 1)), Point(SIZE * (i + 2), SIZE * (j + 2)), Scalar(71, 131, 209), -1);
+			}
+			rectangle(Screen, Point(SIZE * (i + 1), SIZE * (j + 1)), Point(SIZE * (i + 2), SIZE * (j + 2)), Scalar(0, 0, 0), thickness);
+		}
+	}
+	string text = "Chess Game";
+	double font_scale = 1;
+
+	int baseline;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE / 2 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+
+	string letter = "0";
+	for (int i = 0; i < 8; i++) {
+		letter[0] = i + 'a';
+		text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+		int x = SIZE * (i + 1.5) - text_size.width / 2;
+		int y = SIZE * 9.75;
+		putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	}
+	for (int i = 8; i > 0; i--) {
+		letter[0] = i + '0';
+		text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+		int x = SIZE / 4;
+		int y = SIZE * (9.5 - i) + text_size.height / 2;
+		putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	}
+}
+
+void Viewer::drawChess(ChessPiece piece) {
+	Mat chessImg;
+	if (piece.player == 1) {
+		switch (piece.type) {
+		case King:
+			chessImg = imread("Bking.png", -1);
+			break;
+		case Queen:
+			chessImg = imread("Bqueen.png", -1);
+		default:
+			break;
+		}
+	}
+	Point A = BoradtoImg(piece.posX, piece.posY);
+	A.x += (SIZE - chessImg.cols) / 2;
+	A.y += (SIZE - chessImg.rows) / 2;
+	mergeImg(Screen, chessImg, A);
+}
+
+void Viewer::drawMovable(ChessPiece piece) {
+	piece.checkMovable();
+	for (int i = 0; i < piece.movableX.size(); i++) {
+		Point A = BoradtoImg(piece.movableX[i], piece.movableY[i]);
+		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(82, 173, 97), -1);
+	}
+}
