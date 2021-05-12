@@ -14,4 +14,5 @@ void GameManager::exe() {
 	}
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	imshow("Chess Game", viewer.Screen);
+	setMouseCallback("Chess Game", Viewer::mouseCallback, 0);
 }
