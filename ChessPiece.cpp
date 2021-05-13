@@ -1,4 +1,8 @@
 #include "ChessPiece.h"
+#include <opencv2/opencv.hpp>
+#include "GameManager.h"
+using namespace std;
+using namespace cv;
 #define TEST 1
 
 ChessPiece::ChessPiece(int player, Type type, int posX, int posY) {
@@ -17,12 +21,12 @@ void ChessPiece::checkMovable() {
 		// 入堡
 		break;
 	case Queen:
-		for (int i = 1; i <= 8; i++) {
-			for (int faceX = -1; faceX <= 1; faceX++) {
-				for (int faceY = -1; faceY <= 1; faceY++) {
-					if (faceX == 0 && faceY == 0) {
-						continue;
-					}
+		for (int faceX = -1; faceX <= 1; faceX++) {
+			for (int faceY = -1; faceY <= 1; faceY++) {
+				if (faceX == 0 && faceY == 0) {
+					continue;
+				}
+				for (int i = 1; i <= 8; i++) {
 					int targetX, targetY;
 					targetX = posX + i * faceX;
 					targetY = posY + i * faceY;
@@ -54,3 +58,19 @@ void ChessPiece::checkMovable() {
 	}
 
 }
+
+bool ChessPiece::move(int x, int y) {
+	checkMovable();
+	for (int i = 0; i < movableX.size(); i++) {
+		if (movableX[i] == x && movableY[i] == y) {
+			posX = x;
+			posY = y;
+			return true;
+		}
+		else {
+			continue;
+		}
+	}
+	return false;
+}
+
