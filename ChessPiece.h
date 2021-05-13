@@ -19,9 +19,10 @@ public:
 	int posY;
 	int player; // 0 = 白 1 = 黑
 	Type type;
-	// static int boardSituation[8][8]; //可能會用到？
+	
 	vector<int> movableX;
 	vector<int> movableY;
 
 	void checkMovable();
+	bool move(int x, int y);
 };
