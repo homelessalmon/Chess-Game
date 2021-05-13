@@ -17,29 +17,6 @@ Point Viewer::BoradtoImg(int x, int y) {
 	return A;
 }
 
-
-int Viewer::ImgtoBoradX(Point P) {
-	return (P.x / SIZE - 1);
-}
-
-int Viewer::ImgtoBoradY(Point P) {
-	return -(P.y / SIZE - 8);
-}
-
-void Viewer::doMouseCallback(int event, int x, int y, int flags) {
-	if (event == EVENT_LBUTTONUP) {
-		Point PointStart = Point(x, y);
-		int clickedX = ImgtoBoradX(PointStart);
-		int clickedY = ImgtoBoradY(PointStart);
-		cout << clickedX << " " << clickedY << endl;
-	}
-}
-
-void Viewer::mouseCallback(int event, int x, int y, int flags, void* param) {
-    Viewer *self = static_cast<Viewer*>(param);
-    self->doMouseCallback(event, x, y, flags);
-}
-
 bool Viewer::mergeImg(Mat& dst, Mat& src, Point location) {
 	double scale = 1.0, size = 1.0, angle = 0;
 	if (dst.channels() != 3 || src.channels() != 4 || location.x > dst.cols || location.y > dst.cols) {
