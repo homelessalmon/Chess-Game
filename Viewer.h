@@ -4,6 +4,7 @@
 using namespace std;
 using namespace cv;
 typedef class ChessPiece ChessPiece;
+typedef class Viewer Viewer;
 #define SIZE 50
 
 class Viewer {
