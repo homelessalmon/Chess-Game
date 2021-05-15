@@ -17,6 +17,22 @@ void ChessPiece::checkMovable() {
 	movableY.clear();
 	switch (type) {
 	case King:
+		for (int faceX = -1; faceX <= 1; faceX++) {
+			for (int faceY = -1; faceY <= 1; faceY++) {
+				if (faceX == 0 && faceY == 0) {
+					continue;
+				}
+				for (int i = 1; i <= 1; i++) {
+					int targetX, targetY;
+					targetX = posX + i * faceX;
+					targetY = posY + i * faceY;
+					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
+						movableX.push_back(targetX);
+						movableY.push_back(targetY);
+					}
+				}
+			}
+		}	
 		// todo
 		// 入堡
 		break;
