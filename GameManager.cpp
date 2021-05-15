@@ -2,6 +2,7 @@
 #include <vector>
 #include <opencv2/opencv.hpp>
 #include "ChessPiece.h"
+#include "Board.h"
 using namespace std;
 using namespace cv;
 
@@ -65,6 +66,21 @@ void GameManager::mouseCallback1(int event, int x, int y, int flags, void* param
 	self->doMouseCallback1(event, x, y, flags);
 }
 
+void GameManager::renewBoard() {
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			board.boardSituation[i][j] = nullptr;
+			for (int k = 0; k < 2; k++) {
+				for (int l = 0; l < players[k]->OwningPiece.size(); l++) {
+					if (players[k]->OwningPiece[l].posX == i && players[k]->OwningPiece[l].posY == j) {
+						board.boardSituation[i][j] = &players[k]->OwningPiece[l];
+					}
+				}
+			}
+		}
+	}
+}
+
 void GameManager::exe() {
 	testPiece.clear();
 	viewer.drawBoard();
@@ -85,5 +101,4 @@ void GameManager::exe() {
 		}
 		waitKey(100);
 	}
-
 }
