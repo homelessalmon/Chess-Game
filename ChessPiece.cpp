@@ -128,12 +128,12 @@ void ChessPiece::checkMovable() {
 		// todo
 		break;
 	case Pawn:
+		int j;
+		if (!moved)
+			j = 2;
+		else
+			j = 1;
 		if (player == 0) {
-			int j;
-			if (!mov)
-				j = 2;
-			else
-				j = 1;
 			for (int i = 1; i <= j; i++) {
 				int targetX, targetY;
 				targetX = posX;
@@ -145,11 +145,6 @@ void ChessPiece::checkMovable() {
 			}
 		}
 		if (player == 1) {
-			int j;
-			if (!mov)
-				j = 2;
-			else
-				j = 1;
 			for (int i = 1; i <= j; i++) {
 				int targetX, targetY;
 				targetX = posX;
@@ -173,7 +168,7 @@ bool ChessPiece::move(int x, int y) {
 	checkMovable();
 	for (int i = 0; i < movableX.size(); i++) {
 		if (movableX[i] == x && movableY[i] == y) {
-			if (!mov) mov = 1;
+			if (!moved) moved = 1;
 			posX = x;
 			posY = y;
 			return true;
