@@ -32,7 +32,7 @@ void ChessPiece::checkMovable() {
 					}
 				}
 			}
-		}	
+		}
 		// todo
 		// 入堡
 		break;
@@ -173,4 +173,3 @@ bool ChessPiece::move(int x, int y) {
 	}
 	return false;
 }
-
