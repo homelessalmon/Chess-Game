@@ -18,6 +18,7 @@ public:
 	int posX;
 	int posY;
 	int player; // 0 = 白 1 = 黑
+	int moved = 0;
 	Type type;
 	
 	vector<int> movableX;
