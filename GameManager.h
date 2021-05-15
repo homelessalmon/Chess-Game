@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Player.h"
+#include "Board.h"
 #include "Viewer.h"
 #include "ChessPiece.h"
 using namespace std;
@@ -11,6 +12,7 @@ class GameManager {
 public:
 	Player* players[2];
 	int current_player;
+	Board board;
 	Viewer viewer;
 	// int boardSituation[8][8]; //可能會用到？
 
@@ -20,6 +22,8 @@ public:
 	static void mouseCallback2(int event, int x, int y, int flags, void* param);
 	void doMouseCallback1(int event, int x, int y, int flags);
 	void doMouseCallback2(int event, int x, int y, int flags);
+
+	void renewBoard();
 
 #if TEST == 1
 	int status;
