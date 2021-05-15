@@ -91,6 +91,30 @@ void Viewer::drawBoard() {
 
 void Viewer::drawChess(ChessPiece piece) {
 	Mat chessImg;
+	if (piece.player == 0) {
+		switch (piece.type) {
+		case King:
+			chessImg = imread("Wking.png", -1);
+			break;
+		case Queen:
+			chessImg = imread("Wqueen.png", -1);
+			break;
+		case Rook:
+			chessImg = imread("Wrook.png", -1);
+			break;
+		case Bishop:
+			chessImg = imread("Wbishop.png", -1);
+			break;
+		case Knight:
+			chessImg = imread("Wknight.png", -1);
+			break;
+		case Pawn:
+			chessImg = imread("Wpawn.png", -1);
+			break;
+		default:
+			break;
+		}
+	}
 	if (piece.player == 1) {
 		switch (piece.type) {
 		case King:
@@ -98,6 +122,19 @@ void Viewer::drawChess(ChessPiece piece) {
 			break;
 		case Queen:
 			chessImg = imread("Bqueen.png", -1);
+			break;
+		case Rook:
+			chessImg = imread("Brook.png", -1);
+			break;
+		case Bishop:
+			chessImg = imread("Bbishop.png", -1);
+			break;
+		case Knight:
+			chessImg = imread("Bknight.png", -1);
+			break;
+		case Pawn:
+			chessImg = imread("Bpawn.png", -1);
+			break;
 		default:
 			break;
 		}
