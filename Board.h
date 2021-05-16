@@ -6,7 +6,7 @@ class Board {
 public:
 	ChessPiece* boardSituation [8][8];
 	void checkMovable(ChessPiece &piece);
-	bool move(ChessPiece &piece, int x, int y);
+	bool move(ChessPiece &piece, int x, int y, Player**);
 	void beCastling(ChessPiece &piece, int x);
 	void capture(Player&, int);
 	/*Board();
