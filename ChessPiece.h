@@ -14,16 +14,16 @@ enum Type {
 
 class ChessPiece {
 public:
-	ChessPiece(int player, Type type,int posX, int posY);
+	ChessPiece(int player, Type type, int posX, int posY);
 	int posX;
 	int posY;
 	int player; // 0 = 白 1 = 黑
 	int moved = 0;
 	Type type;
-	
+
 	vector<int> movableX;
 	vector<int> movableY;
 
-	void checkMovable();
-	bool move(int x, int y);
+	//void checkMovable();
+	//bool move(int x, int y);
 };
