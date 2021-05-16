@@ -16,6 +16,42 @@ int GameManager::ImgtoBoradY(Point P) {
 
 void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
+		if (x >= SIZE * 2.8125 && x <= SIZE * 3.8125 && y >= SIZE * 5 && y <= SIZE * 6) {
+			players[currentPlayer]->OwningPiece[pieceNo].type = Queen;
+			logTemp = logTemp + " " + 'Q';
+		}
+		else if (x >= SIZE * 3.9375 && x <= SIZE * 4.9375 && y >= SIZE * 5 && y <= SIZE * 6) {
+			players[currentPlayer]->OwningPiece[pieceNo].type = Rook;
+			logTemp = logTemp + " " + 'R';
+		}
+		else if (x >= SIZE * 5.0625 && x <= SIZE * 6.0625 && y >= SIZE * 5 && y <= SIZE * 6) {
+			players[currentPlayer]->OwningPiece[pieceNo].type = Bishop;
+			logTemp = logTemp + " " + 'B';
+		}
+		else if (x >= SIZE * 6.1875 && x <= SIZE * 7.1875 && y >= SIZE * 5 && y <= SIZE * 6) {
+			players[currentPlayer]->OwningPiece[pieceNo].type = Knight;
+			logTemp = logTemp + " " + 'K';
+		}
+		else {
+			return;
+		}
+		status = Standby;
+		cout << logTemp << endl; //這個是log
+		renewBoard();
+		viewer.drawBoard();
+		for (int j = 0; j < 2; j++) {
+			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+				viewer.drawChess(players[j]->OwningPiece[i]);
+			}
+		}
+		imshow("Chess Game", viewer.Screen);
+		if (currentPlayer == 0) {
+			currentPlayer = 1;
+		}
+		else {
+			currentPlayer = 0;
+			viewer.drawTurn(0);
+		}
 	}
 }
 
@@ -92,7 +128,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		}
 		imshow("Chess Game", viewer.Screen);
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == Pawn) {
-			if (currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) {
+			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
 				status = Promoting;
 				viewer.drawPromotingTips(currentPlayer);
 				imshow("Chess Game", viewer.Screen);
