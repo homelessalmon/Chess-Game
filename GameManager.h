@@ -37,3 +37,7 @@ private:
 	vector<ChessPiece> testPiece;
 #endif // TEST == 1
 };
+
+void undo(vector<string>& stack, Board& board, Player** players);
+
+void redo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players);
