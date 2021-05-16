@@ -19,22 +19,27 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 		Point PointStart = Point(x, y);
 		int clickedX = GameManager::ImgtoBoradX(PointStart);
 		int clickedY = GameManager::ImgtoBoradY(PointStart);
-		if (testPiece[pieceNo].move(clickedX, clickedY)) {
-			viewer.drawBoard();
-			for (int i = 0; i < testPiece.size(); i++) {
-				viewer.drawChess(testPiece[i]);
+		bool flag = players[currentPlayer]->OwningPiece[pieceNo].move(clickedX, clickedY);
+		viewer.drawBoard();
+		for (int j = 0; j < 2; j++) {
+			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+				viewer.drawChess(players[j]->OwningPiece[i]);
 			}
-			imshow("Chess Game", viewer.Screen);
-			status = 0;
 		}
-		else {
-			viewer.drawBoard();
-			for (int i = 0; i < testPiece.size(); i++) {
-				viewer.drawChess(testPiece[i]);
+		imshow("Chess Game", viewer.Screen);
+		status = 0;
+		if (flag) {
+
+			if (currentPlayer == 0) {
+				currentPlayer = 1;
 			}
-			imshow("Chess Game", viewer.Screen);
-			status = 0;
+			else {
+				currentPlayer = 0;
+			}
+			renewBoard();
 		}
+
+
 	}
 }
 
@@ -48,9 +53,9 @@ void GameManager::doMouseCallback1(int event, int x, int y, int flags) {
 		Point PointStart = Point(x, y);
 		int clickedX = ImgtoBoradX(PointStart);
 		int clickedY = ImgtoBoradY(PointStart);
-		for (int i = 0; i < testPiece.size(); i++) {
-			if (testPiece[i].posX == clickedX && testPiece[i].posY == clickedY) {
-				viewer.drawMovable(testPiece[i]);
+		for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+			if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
+				viewer.drawMovable(players[currentPlayer]->OwningPiece[i]);
 				imshow("Chess Game", viewer.Screen);
 				status = 1;
 				pieceNo = i;
@@ -83,26 +88,29 @@ void GameManager::renewBoard() {
 
 void GameManager::exe() {
 	viewer.drawBoard();
-	for (int i = 0; i < 2; i++)
-	{
+	for (int i = 0; i < 2; i++) {
 		players[i] = new Player(i);
 		//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
 	}
-	for (int j = 0; j < 2; j++)
-	{
+	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
 			viewer.drawChess(players[j]->OwningPiece[i]);
 		}
 	}
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	imshow("Chess Game", viewer.Screen);
+	currentPlayer = 0;
 	status = 0;
 	while (1) {
-		if (status == 0) {
+		switch (status) {
+		case 0:
 			setMouseCallback("Chess Game", mouseCallback1, this);
-		}
-		else {
+			break;
+		case 1:
 			setMouseCallback("Chess Game", mouseCallback2, this);
+			break;
+		default:
+			break;
 		}
 		waitKey(100);
 	}
