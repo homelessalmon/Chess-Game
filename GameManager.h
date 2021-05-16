@@ -25,16 +25,15 @@ public:
 	void doMouseCallback2(int event, int x, int y, int flags);
 
 	void renewBoard();
-private:
-	int status;
-	int startX;
-	int startY;
-#if TEST == 1
-
-	int pieceNo;
-	vector<ChessPiece> testPiece;
-
-#endif // TEST == 1
 	static int ImgtoBoradX(Point P); //得出P點對應的棋盤X座標
 	static int ImgtoBoradY(Point P); //得出P點對應的棋盤Y座標
+
+private:
+	int status;
+	int pieceNo;
+#if TEST == 1
+	int startX;
+	int startY;
+	vector<ChessPiece> testPiece;
+#endif // TEST == 1
 };
