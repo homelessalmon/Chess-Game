@@ -9,8 +9,8 @@ public:
 	bool move(ChessPiece& piece, int x, int y, Player**);
 	void beCastling(ChessPiece& piece, int x);
 	void capture(Player& player, int i);
-	bool kingCheck(ChessPiece* const [8][8], ChessPiece&, int, int, int);
-	bool checkCheck(ChessPiece* const [8][8], ChessPiece&, int);
+	bool kingCheck(ChessPiece&, int, int, int);
+	bool checkCheck(int);
 	/*Board();
 	Board(Player* players[2]);*/
 };
