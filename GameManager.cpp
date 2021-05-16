@@ -21,19 +21,19 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 		int clickedY = GameManager::ImgtoBoradY(PointStart);
 		bool flag;
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == -2) {
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY);
+			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
 				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX + 1][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX - 1);
 			}
 		}
 		else if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == 2) {
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY);
+			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
 				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX - 2][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX + 1);
 			}
 		}
 		else {
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY);
+			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 		}
 		viewer.drawBoard();
 		for (int j = 0; j < 2; j++) {
