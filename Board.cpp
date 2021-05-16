@@ -137,6 +137,10 @@ void Board::checkMovable(ChessPiece& piece) {
 	piece.capturableY.clear();
 	piece.epcX.clear();
 	piece.epcY.clear();
+	
+	int opponent;
+	if (piece.player == 0) opponent = 1;
+	else opponent = 0;
 
 	switch (piece.type) {
 	case King:
