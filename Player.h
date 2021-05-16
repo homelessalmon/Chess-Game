@@ -8,12 +8,12 @@ using namespace std;
 typedef class ChessPiece ChessPiece;
 
 class Player {
-	vector<ChessPiece> OwningPiece;
 public:
+	vector<ChessPiece> OwningPiece;
 	Player(int);
 };
 
 class AI_player : public Player
 {
-
+	AI_player(int);
 };
