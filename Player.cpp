@@ -23,3 +23,5 @@ Player::Player(int n)//n=0 white,1 black
 		OwningPiece.push_back(King);
 	}
 }
+
+AI_player::AI_player(int n) :Player(n) {  }
