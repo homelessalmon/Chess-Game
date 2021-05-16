@@ -177,13 +177,17 @@ void Board::checkMovable(ChessPiece& piece) {
 		if (piece.moved == 0) {
 			//短
 			if (boardSituation[piece.posX + 1][piece.posY] == nullptr && boardSituation[piece.posX + 2][piece.posY] == nullptr && boardSituation[piece.posX + 3][piece.posY]->type == Rook && boardSituation[piece.posX + 3][piece.posY]->moved == 0) {
-				piece.movableX.push_back(piece.posX + 2);
-				piece.movableY.push_back(piece.posY);
+				if (kingCheck(boardSituation, piece, opponent, piece.posX + 2, piece.posY)) {
+					piece.movableX.push_back(piece.posX + 2);
+					piece.movableY.push_back(piece.posY);
+				}
 			}
 			//長
 			if (boardSituation[piece.posX - 1][piece.posY] == nullptr && boardSituation[piece.posX - 2][piece.posY] == nullptr && boardSituation[piece.posX - 3][piece.posY] == nullptr && boardSituation[piece.posX - 4][piece.posY]->type == Rook && boardSituation[piece.posX - 4][piece.posY]->moved == 0) {
-				piece.movableX.push_back(piece.posX - 2);
-				piece.movableY.push_back(piece.posY);
+				if (kingCheck(boardSituation, piece, opponent, piece.posX - 2, piece.posY)) {
+					piece.movableX.push_back(piece.posX - 2);
+					piece.movableY.push_back(piece.posY);
+				}
 			}
 		}
 		break;
