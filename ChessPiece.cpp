@@ -168,9 +168,9 @@ bool ChessPiece::move(int x, int y) {
 	checkMovable();
 	for (int i = 0; i < movableX.size(); i++) {
 		if (movableX[i] == x && movableY[i] == y) {
-			if (!moved) moved = 1;
 			posX = x;
 			posY = y;
+			moved++;
 			return true;
 		}
 		else {
