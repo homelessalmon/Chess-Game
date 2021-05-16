@@ -11,4 +11,3 @@ ChessPiece::ChessPiece(int player, Type type, int posX, int posY) {
 	ChessPiece::posX = posX;
 	ChessPiece::posY = posY;
 }
-
