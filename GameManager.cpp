@@ -14,7 +14,17 @@ int GameManager::ImgtoBoradY(Point P) {
 	return -(P.y / SIZE - 8);
 }
 
-void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
+void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
+	if (event == EVENT_LBUTTONUP) {
+	}
+}
+
+void GameManager::mouseCallbackPromoting(int event, int x, int y, int flags, void* param) {
+	GameManager* self = static_cast<GameManager*>(param);
+	self->doMouseCallbackMoving(event, x, y, flags);
+}
+
+void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
 		Point PointStart = Point(x, y);
 		int clickedX = GameManager::ImgtoBoradX(PointStart);
@@ -42,7 +52,15 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 			}
 		}
 		imshow("Chess Game", viewer.Screen);
-		status = 0;
+		if (players[currentPlayer]->OwningPiece[pieceNo].type == Pawn) {
+			if (currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) {
+				status = Promoting;
+				viewer.drawPromotingTips(currentPlayer);
+				imshow("Chess Game", viewer.Screen);
+				return;
+			}
+		}
+		status = Standby;
 		if (flag) {
 			renewBoard();
 			if (currentPlayer == 0) {
@@ -50,48 +68,62 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 			}
 			else {
 				currentPlayer = 0;
+				viewer.drawTurn(0);
 			}
 		}
 
+		viewer.drawTurn(currentPlayer);
+		imshow("Chess Game", viewer.Screen);
 
 	}
 }
 
-void GameManager::mouseCallback2(int event, int x, int y, int flags, void* param) {
+void GameManager::mouseCallbackMoving(int event, int x, int y, int flags, void* param) {
 	GameManager* self = static_cast<GameManager*>(param);
-	self->doMouseCallback2(event, x, y, flags);
+	self->doMouseCallbackMoving(event, x, y, flags);
 }
 
-void GameManager::doMouseCallback1(int event, int x, int y, int flags) {
+void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
 		Point PointStart = Point(x, y);
-		int clickedX = ImgtoBoradX(PointStart);
-		int clickedY = ImgtoBoradY(PointStart);
-		/*if (currentPlayer == board.boardSituation[clickedX][clickedY]->player) {
-			board.checkMovable(*board.boardSituation[clickedX][clickedY]);
-			viewer.drawMovable(board, clickedX, clickedY);
-			imshow("Chess Game", viewer.Screen);
-			status = 1;
-			startX = clickedX;
-			startY = clickedY;
-		}*/
-
-		for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
-			if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
+		if (PointStart.x >= SIZE && PointStart.x <= SIZE * 9 && PointStart.y >= SIZE && PointStart.y <= SIZE * 9) {
+			int clickedX = ImgtoBoradX(PointStart);
+			int clickedY = ImgtoBoradY(PointStart);
+			/*if (currentPlayer == board.boardSituation[clickedX][clickedY]->player) {
+				board.checkMovable(*board.boardSituation[clickedX][clickedY]);
 				viewer.drawMovable(board, clickedX, clickedY);
 				imshow("Chess Game", viewer.Screen);
 				status = 1;
-				pieceNo = i;
+				startX = clickedX;
+				startY = clickedY;
+			}*/
+
+			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+				if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
+					viewer.drawMovable(board, clickedX, clickedY);
+					imshow("Chess Game", viewer.Screen);
+					status = Moving;
+					pieceNo = i;
+				}
 			}
+		}
+		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
+			//undo
+		}
+		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
+			//redo
+		}
+		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
+			//FF.
 		}
 	}
 }
 
 
 
-void GameManager::mouseCallback1(int event, int x, int y, int flags, void* param) {
+void GameManager::mouseCallbackStandby(int event, int x, int y, int flags, void* param) {
 	GameManager* self = static_cast<GameManager*>(param);
-	self->doMouseCallback1(event, x, y, flags);
+	self->doMouseCallbackStandby(event, x, y, flags);
 }
 
 void GameManager::renewBoard() {
@@ -120,19 +152,24 @@ void GameManager::exe() {
 			viewer.drawChess(players[j]->OwningPiece[i]);
 		}
 	}
+	int undoable = 0, redoable = 0;
+	viewer.drawButton(undoable, redoable);
+	currentPlayer = 0;
+	viewer.drawTurn(currentPlayer);
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	imshow("Chess Game", viewer.Screen);
 	renewBoard();
-	currentPlayer = 0;
-	status = 0;
+	status = Standby;
 	while (1) {
 		switch (status) {
-		case 0:
-			setMouseCallback("Chess Game", mouseCallback1, this);
+		case Standby:
+			setMouseCallback("Chess Game", mouseCallbackStandby, this);
 			break;
-		case 1:
-			setMouseCallback("Chess Game", mouseCallback2, this);
+		case Moving:
+			setMouseCallback("Chess Game", mouseCallbackMoving, this);
 			break;
+		case Promoting:
+			setMouseCallback("Chess Game", mouseCallbackPromoting, this);
 		default:
 			break;
 		}
