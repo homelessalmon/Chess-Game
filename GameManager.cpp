@@ -21,7 +21,7 @@ void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 
 void GameManager::mouseCallbackPromoting(int event, int x, int y, int flags, void* param) {
 	GameManager* self = static_cast<GameManager*>(param);
-	self->doMouseCallbackMoving(event, x, y, flags);
+	self->doMouseCallbackPromoting(event, x, y, flags);
 }
 
 void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
@@ -30,20 +30,59 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		int clickedX = GameManager::ImgtoBoradX(PointStart);
 		int clickedY = GameManager::ImgtoBoradY(PointStart);
 		bool flag;
+		logTemp = "";
+		char p = currentPlayer + '0';
+		logTemp = logTemp + p + " ";
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == -2) {
 			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
 				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX + 1][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX - 1);
+				logTemp = logTemp + "O-O";
 			}
+
+
 		}
 		else if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == 2) {
 			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
 				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX - 2][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX + 1);
+				logTemp = logTemp + "O-O-O";
 			}
+
 		}
 		else {
+			char captured = 'X';
+			if (board.boardSituation[clickedX][clickedY] != nullptr) {
+				switch (board.boardSituation[clickedX][clickedY]->type) {
+				case Queen:
+					captured = 'Q';
+					break;
+				case Bishop:
+					captured = 'B';
+					break;
+				case Knight:
+					captured = 'K';
+					break;
+				case Rook:
+					captured = 'R';
+					break;
+				case Pawn:
+					captured = 'P';
+					break;
+				default:
+					break;
+				}
+			}
 			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
+			if (flag) {
+				char endX = clickedX + '0';
+				char endY = clickedY + '0';
+				logTemp = logTemp + startX + " " + startY + " " + endX + " " + endY + " " + captured;
+				if (players[currentPlayer]->OwningPiece[pieceNo].epcd == 1) {
+					logTemp = logTemp + " " + 'P';
+					players[currentPlayer]->OwningPiece[pieceNo].epcd = 0;
+				}
+			}
 		}
 		viewer.drawBoard();
 		for (int j = 0; j < 2; j++) {
@@ -62,6 +101,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		}
 		status = Standby;
 		if (flag) {
+			cout << logTemp << endl;
 			renewBoard();
 			if (currentPlayer == 0) {
 				currentPlayer = 1;
@@ -89,14 +129,6 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 		if (PointStart.x >= SIZE && PointStart.x <= SIZE * 9 && PointStart.y >= SIZE && PointStart.y <= SIZE * 9) {
 			int clickedX = ImgtoBoradX(PointStart);
 			int clickedY = ImgtoBoradY(PointStart);
-			/*if (currentPlayer == board.boardSituation[clickedX][clickedY]->player) {
-				board.checkMovable(*board.boardSituation[clickedX][clickedY]);
-				viewer.drawMovable(board, clickedX, clickedY);
-				imshow("Chess Game", viewer.Screen);
-				status = 1;
-				startX = clickedX;
-				startY = clickedY;
-			}*/
 
 			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
 				if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
@@ -104,6 +136,8 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					imshow("Chess Game", viewer.Screen);
 					status = Moving;
 					pieceNo = i;
+					startX = clickedX + '0';
+					startY = clickedY + '0';
 				}
 			}
 		}
