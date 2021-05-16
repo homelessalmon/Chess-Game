@@ -8,6 +8,7 @@ public:
 	void checkMovable(ChessPiece &piece);
 	bool move(ChessPiece &piece, int x, int y);
 	void beCastling(ChessPiece &piece, int x);
+	void capture(Player&, int);
 	/*Board();
 	Board(Player* players[2]);*/
 };
