@@ -145,10 +145,18 @@ void Viewer::drawChess(ChessPiece piece) {
 	mergeImg(Screen, chessImg, A);
 }
 
-void Viewer::drawMovable(ChessPiece piece) {
-	piece.checkMovable();
-	for (int i = 0; i < piece.movableX.size(); i++) {
-		Point A = BoradtoImg(piece.movableX[i], piece.movableY[i]);
+//void Viewer::drawMovable(ChessPiece piece) {
+//	
+//	for (int i = 0; i < piece.movableX.size(); i++) {
+//		Point A = BoradtoImg(piece.movableX[i], piece.movableY[i]);
+//		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(82, 173, 97), -1);
+//	}
+//}
+
+void Viewer::drawMovable(Board board, int x, int y) {
+	board.checkMovable(*board.boardSituation[x][y]);
+	for (int i = 0; i < board.boardSituation[x][y]->movableX.size(); i++) {
+		Point A = BoradtoImg(board.boardSituation[x][y]->movableX[i], board.boardSituation[x][y]->movableY[i]);
 		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(82, 173, 97), -1);
 	}
 }
