@@ -11,8 +11,11 @@ class Viewer {
 public:
 	Viewer();
 	void drawBoard(); //繪製棋盤、底板
+	void drawButton(int undo, int redo);
+	void drawTurn(int player);
 	void drawChess(ChessPiece piece); //繪製piece對應的棋子
 	void drawMovable(Board board, int x, int y); //繪製piece可走的方格
+	void drawPromotingTips(int player);
 	Mat Screen;
 private:
 	Point BoradtoImg(int x, int y); //得出某棋盤格左上角的座標
