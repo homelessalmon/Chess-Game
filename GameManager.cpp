@@ -82,12 +82,17 @@ void GameManager::renewBoard() {
 }
 
 void GameManager::exe() {
-	testPiece.clear();
 	viewer.drawBoard();
-	ChessPiece A(1, Queen, 5, 4);
-	testPiece.push_back(A);
-	for (int i = 0; i < testPiece.size(); i++) {
-		viewer.drawChess(testPiece[i]);
+	for (int i = 0; i < 2; i++)
+	{
+		players[i] = new Player(i);
+		//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
+	}
+	for (int j = 0; j < 2; j++)
+	{
+		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+			viewer.drawChess(players[j]->OwningPiece[i]);
+		}
 	}
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	imshow("Chess Game", viewer.Screen);
