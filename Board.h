@@ -4,11 +4,12 @@
 
 class Board {
 public:
-	ChessPiece* boardSituation [8][8];
-	void checkMovable(ChessPiece &piece);
-	bool move(ChessPiece &piece, int x, int y, Player** players);
-	void beCastling(ChessPiece &piece, int x);
-	void capture(Player &player, int i);
+	ChessPiece* boardSituation[8][8];
+	void checkMovable(ChessPiece& piece);
+	bool move(ChessPiece& piece, int x, int y, Player**);
+	void beCastling(ChessPiece& piece, int x);
+	void capture(Player& player, int i);
+	bool kingCheck(ChessPiece* const [8][8], ChessPiece&, int, int, int);
 	/*Board();
 	Board(Player* players[2]);*/
 };
