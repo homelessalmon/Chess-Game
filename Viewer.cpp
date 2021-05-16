@@ -101,7 +101,7 @@ void Viewer::drawButton(int undo, int redo) {
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(82, 173, 97), -1);
 	}
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(0, 0, 0), thickness);
-	
+
 	text = "redo";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 9.5 - text_size.width / 2;
@@ -119,8 +119,8 @@ void Viewer::drawButton(int undo, int redo) {
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(31, 23, 176), -1);
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(0, 0, 0), thickness);
-	
-	
+
+
 }
 
 void Viewer::drawTurn(int player) {
@@ -213,5 +213,56 @@ void Viewer::drawMovable(Board board, int x, int y) {
 void Viewer::drawPromotingTips(int player) {
 	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(200, 200, 200), -1);
 	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(0, 0, 0), 1);
-	//for (int i = 0; )
+	string text = "Promotion";
+	double font_scale = 1;
+	int baseline;
+	int thickness = 1;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE * 4.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	for (int i = 0; i < 4; i++) {
+		rectangle(Screen, Point(SIZE * (2.8125 + i * 1.125), SIZE * 5), Point(SIZE * (3.8125 + i * 1.125), SIZE * 6), Scalar(0, 0, 0), 1);
+		Mat chessImg;
+		switch (i) {
+		case 0:
+			if (player == 0) {
+				chessImg = imread("Wqueen.png", -1);
+			}
+			else {
+				chessImg = imread("Bqueen.png", -1);
+			}
+			break;
+		case 1:
+			if (player == 0) {
+				chessImg = imread("Wrook.png", -1);
+			}
+			else {
+				chessImg = imread("Brook.png", -1);
+			}
+			break;
+		case 2:
+			if (player == 0) {
+				chessImg = imread("Wbishop.png", -1);
+			}
+			else {
+				chessImg = imread("Bbishop.png", -1);
+			}
+			break;
+		case 3:
+			if (player == 0) {
+				chessImg = imread("Wknight.png", -1);
+			}
+			else {
+				chessImg = imread("Bknight.png", -1);
+			}
+			break;
+		default:
+			break;
+		}
+		Point A(SIZE * (2.8125 + i * 1.125), SIZE * 5);
+		A.x += (SIZE - chessImg.cols) / 2;
+		A.y += (SIZE - chessImg.rows) / 2;
+		mergeImg(Screen, chessImg, A);
+	}
 }
