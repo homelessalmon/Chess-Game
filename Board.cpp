@@ -25,6 +25,8 @@ void Board::checkMovable(ChessPiece& piece) {
 	piece.movableY.clear();
 	piece.capturableX.clear();
 	piece.capturableY.clear();
+	piece.epcX.clear();
+	piece.epcY.clear();
 
 	switch (piece.type) {
 	case King:
@@ -231,7 +233,7 @@ void Board::checkMovable(ChessPiece& piece) {
 				targetX = piece.posX;
 				targetY = piece.posY + i;
 				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-				
+
 				if (boardSituation[targetX][targetY] != NULL) break;
 
 				if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
@@ -257,6 +259,26 @@ void Board::checkMovable(ChessPiece& piece) {
 					}
 				}
 			}
+
+			//check epc
+			for (int i = -1; i <= 1; i++) {
+				if (i == 0) continue;
+				int targetX, targetY;
+				targetX = piece.posX + i * 1;
+				targetY = piece.posY;
+				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
+
+				if (boardSituation[targetX][targetY] != NULL) {
+					if (boardSituation[targetX][targetY]->player == piece.player)
+						continue;
+					else if (boardSituation[targetX][targetY]->epc){
+						piece.epcX.push_back(targetX);
+						piece.epcY.push_back(targetY);
+						piece.movableX.push_back(targetX);
+						piece.movableY.push_back(targetY + 1);
+					}
+				}
+			}
 		}
 		if (piece.player == 1) {
 			for (int i = 1; i <= j; i++) {
@@ -264,7 +286,7 @@ void Board::checkMovable(ChessPiece& piece) {
 				targetX = piece.posX;
 				targetY = piece.posY - i;
 				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-				
+
 				if (boardSituation[targetX][targetY] != NULL) break;
 
 				if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
@@ -290,6 +312,26 @@ void Board::checkMovable(ChessPiece& piece) {
 					}
 				}
 			}
+
+			//check epc
+			for (int i = -1; i <= 1; i++) {
+				if (i == 0) continue;
+				int targetX, targetY;
+				targetX = piece.posX + i * 1;
+				targetY = piece.posY;
+				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
+
+				if (boardSituation[targetX][targetY] != NULL) {
+					if (boardSituation[targetX][targetY]->player == piece.player)
+						continue;
+					else if (boardSituation[targetX][targetY]->epc) {
+						piece.epcX.push_back(targetX);
+						piece.epcY.push_back(targetY);
+						piece.movableX.push_back(targetX);
+						piece.movableY.push_back(targetY - 1);
+					}
+				}
+			}
 		}
 		// 注意兵過路吃
 		break;
@@ -298,7 +340,7 @@ void Board::checkMovable(ChessPiece& piece) {
 	}
 }
 
-bool Board::move(ChessPiece &piece, int x, int y, Player** players) {
+bool Board::move(ChessPiece& piece, int x, int y, Player** players) {
 	checkMovable(piece);
 	for (int i = 0; i < piece.movableX.size(); i++) {
 		if (piece.movableX[i] == x && piece.movableY[i] == y) {
@@ -307,10 +349,41 @@ bool Board::move(ChessPiece &piece, int x, int y, Player** players) {
 			piece.posX = x;
 			piece.posY = y;
 			piece.moved++;
+
+			//epc
+			if (piece.type == Pawn && piece.player == 0) {
+				for (int i = 0; i < piece.epcX.size(); i++) {
+					if (piece.epcX[i] == x && piece.epcY[i] == y - 1) {
+						int idx;
+						for (idx = 0; idx < players[boardSituation[x][y - 1]->player]->OwningPiece.size(); idx++) {
+							if (players[boardSituation[x][y - 1]->player]->OwningPiece[idx].posX == x && players[boardSituation[x][y - 1]->player]->OwningPiece[idx].posY == y - 1) {
+								break;
+							}
+						}
+						capture(*players[boardSituation[x][y - 1]->player], idx);
+					}
+				}
+			}
+			if (piece.type == Pawn && piece.player == 1) {
+				for (int i = 0; i < piece.epcX.size(); i++) {
+					if (piece.epcX[i] == x && piece.epcY[i] == y + 1) {
+						int idx;
+						for (idx = 0; idx < players[boardSituation[x][y + 1]->player]->OwningPiece.size(); idx++) {
+							if (players[boardSituation[x][y + 1]->player]->OwningPiece[idx].posX == x && players[boardSituation[x][y + 1]->player]->OwningPiece[idx].posY == y + 1) {
+								break;
+							}
+						}
+						capture(*players[boardSituation[x][y + 1]->player], idx);
+					}
+				}
+			}
+
+			for (int j = 0; j < players[piece.player]->OwningPiece.size(); j++) {
+				players[piece.player]->OwningPiece[j].epc = 0;
+			}
+			if (piece.type == Pawn && piece.moved == 1)
+				piece.epc = 1;
 			return true;
-		}
-		else {
-			continue;
 		}
 	}
 	for (int i = 0; i < piece.capturableX.size(); i++) {
@@ -327,16 +400,17 @@ bool Board::move(ChessPiece &piece, int x, int y, Player** players) {
 			piece.posX = x;
 			piece.posY = y;
 			piece.moved++;
+			for (int j = 0; j < players[piece.player]->OwningPiece.size(); j++) {
+				players[piece.player]->OwningPiece[j].epc = 0;
+			}
 			return true;
 		}
-		else {
-			continue;
-		}
 	}
+
 	return false;
 }
 
-void Board::capture(Player &player, int i) {
+void Board::capture(Player& player, int i) {
 	player.OwningPiece.erase(player.OwningPiece.begin() + i);
 }
 
