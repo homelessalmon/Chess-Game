@@ -101,7 +101,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		}
 		status = Standby;
 		if (flag) {
-			cout << logTemp << endl;
+			cout << logTemp << endl; //這個是log
 			renewBoard();
 			if (currentPlayer == 0) {
 				currentPlayer = 1;
