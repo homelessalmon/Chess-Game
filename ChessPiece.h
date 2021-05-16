@@ -20,6 +20,7 @@ public:
 	int player; // 0 = 白 1 = 黑
 	int moved = 0;
 	int epc = 0; //whether en passant capture is available
+	int epcd = 0;
 	Type type;
 
 	vector<int> movableX;
