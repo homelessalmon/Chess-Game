@@ -211,5 +211,7 @@ void Viewer::drawMovable(Board board, int x, int y) {
 }
 
 void Viewer::drawPromotingTips(int player) {
-
+	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(200, 200, 200), -1);
+	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(0, 0, 0), 1);
+	//for (int i = 0; )
 }
