@@ -20,7 +20,7 @@
 //	}
 //}
 
-void Board::checkMovable(ChessPiece &piece) {
+void Board::checkMovable(ChessPiece& piece) {
 	piece.movableX.clear();
 	piece.movableY.clear();
 	switch (piece.type) {
@@ -34,6 +34,18 @@ void Board::checkMovable(ChessPiece &piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
+					if (targetX < 0 || targetY < 0) continue;
+
+					if (boardSituation[targetX][targetY] != NULL) {
+						if (boardSituation[targetX][targetY]->player == piece.player)
+							break;
+						else {
+							piece.capturableX.push_back(targetX);
+							piece.capturableY.push_back(targetY);
+							break;
+						}
+					}
+
 					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 						piece.movableX.push_back(targetX);
 						piece.movableY.push_back(targetY);
@@ -54,6 +66,18 @@ void Board::checkMovable(ChessPiece &piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
+					if (targetX < 0 || targetY < 0) continue;
+
+					if (boardSituation[targetX][targetY] != NULL) {
+						if (boardSituation[targetX][targetY]->player == piece.player)
+							break;
+						else {
+							piece.capturableX.push_back(targetX);
+							piece.capturableY.push_back(targetY);
+							break;
+						}
+					}
+
 					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 						piece.movableX.push_back(targetX);
 						piece.movableY.push_back(targetY);
@@ -73,6 +97,18 @@ void Board::checkMovable(ChessPiece &piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
+					if (targetX < 0 || targetY < 0) continue;
+
+					if (boardSituation[targetX][targetY] != NULL) {
+						if (boardSituation[targetX][targetY]->player == piece.player)
+							break;
+						else {
+							piece.capturableX.push_back(targetX);
+							piece.capturableY.push_back(targetY);
+							break;
+						}
+					}
+
 					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 						piece.movableX.push_back(targetX);
 						piece.movableY.push_back(targetY);
@@ -92,6 +128,18 @@ void Board::checkMovable(ChessPiece &piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
+					if (targetX < 0 || targetY < 0) continue;
+
+					if (boardSituation[targetX][targetY] != NULL) {
+						if (boardSituation[targetX][targetY]->player == piece.player)
+							break;
+						else {
+							piece.capturableX.push_back(targetX);
+							piece.capturableY.push_back(targetY);
+							break;
+						}
+					}
+
 					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 						piece.movableX.push_back(targetX);
 						piece.movableY.push_back(targetY);
@@ -113,6 +161,17 @@ void Board::checkMovable(ChessPiece &piece) {
 						int targetX, targetY;
 						targetX = piece.posX + 2 * faceX;
 						targetY = piece.posY + i * faceX;
+						if (targetX < 0 || targetY < 0) continue;
+
+						if (boardSituation[targetX][targetY] != NULL) {
+							if (boardSituation[targetX][targetY]->player == piece.player)
+								continue;
+							else {
+								piece.capturableX.push_back(targetX);
+								piece.capturableY.push_back(targetY);
+								continue;
+							}
+						}
 						if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 							piece.movableX.push_back(targetX);
 							piece.movableY.push_back(targetY);
@@ -125,7 +184,18 @@ void Board::checkMovable(ChessPiece &piece) {
 						int targetX, targetY;
 						targetX = piece.posX + i * faceY;
 						targetY = piece.posY + 2 * faceY;
-						if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
+						if (targetX < 0 || targetY < 0) continue;
+
+						if (boardSituation[targetX][targetY] != NULL) {
+							if (boardSituation[targetX][targetY]->player == piece.player)
+								continue;
+							else {
+								piece.capturableX.push_back(targetX);
+								piece.capturableY.push_back(targetY);
+								continue;
+							}
+						}
+						else if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 							piece.movableX.push_back(targetX);
 							piece.movableY.push_back(targetY);
 						}
@@ -146,6 +216,18 @@ void Board::checkMovable(ChessPiece &piece) {
 				int targetX, targetY;
 				targetX = piece.posX;
 				targetY = piece.posY + i;
+				if (targetX < 0 || targetY < 0) continue;
+				
+				if (boardSituation[targetX][targetY] != NULL) {
+					if (boardSituation[targetX][targetY]->player == piece.player)
+						break;
+					else {
+						piece.capturableX.push_back(targetX);
+						piece.capturableY.push_back(targetY);
+						break;
+					}
+				}
+
 				if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 					piece.movableX.push_back(targetX);
 					piece.movableY.push_back(targetY);
@@ -157,6 +239,17 @@ void Board::checkMovable(ChessPiece &piece) {
 				int targetX, targetY;
 				targetX = piece.posX;
 				targetY = piece.posY - i;
+				
+				if (boardSituation[targetX][targetY] != NULL) {
+					if (boardSituation[targetX][targetY]->player == piece.player)
+						break;
+					else {
+						piece.capturableX.push_back(targetX);
+						piece.capturableY.push_back(targetY);
+						break;
+					}
+				}
+
 				if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
 					piece.movableX.push_back(targetX);
 					piece.movableY.push_back(targetY);
@@ -172,7 +265,7 @@ void Board::checkMovable(ChessPiece &piece) {
 	}
 }
 
-bool Board::move(ChessPiece &piece, int x, int y) {
+bool Board::move(ChessPiece& piece, int x, int y) {
 	checkMovable(piece);
 	for (int i = 0; i < piece.movableX.size(); i++) {
 		if (piece.movableX[i] == x && piece.movableY[i] == y) {
