@@ -130,6 +130,114 @@ bool Board::kingCheck(ChessPiece* const current[8][8], ChessPiece& piece, int op
 	return true;
 }
 
+bool Board::checkCheck(ChessPiece* const current[8][8], ChessPiece& piece, int opponent)
+{
+	Board tmp;
+	for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < 8; i++) {
+			tmp.boardSituation[i][j] = current[i][j];
+		}
+	}
+
+	int kingX = -1, kingY = -1;
+
+	for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < 8; i++) {
+			if (tmp.boardSituation[i][j] != nullptr) {
+				if (tmp.boardSituation[i][j]->player == piece.player && tmp.boardSituation[i][j]->type == King) {
+					kingX = i;
+					kingY = j;
+					break;
+				}
+			}
+		}
+		if (kingX != -1) break;
+	}
+
+	for (int faceX = -1; faceX <= 1; faceX++) {
+		for (int faceY = -1; faceY <= 1; faceY++) {
+			if (faceX == 0 && faceY == 0) continue;
+			if (faceX != 0 && faceY != 0) {
+				for (int i = 1; i <= 8; i++) {
+					int targetX, targetY;
+					targetX = kingX + i * faceX;
+					targetY = kingY + i * faceY;
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
+					if (tmp.boardSituation[targetX][targetY] != nullptr) {
+						if (tmp.boardSituation[targetX][targetY]->player == opponent) {
+							if (tmp.boardSituation[targetX][targetY]->type == Bishop || tmp.boardSituation[targetX][targetY]->type == Queen)
+								return false;
+							if (i == 1 && tmp.boardSituation[targetX][targetY]->type == King)
+								return false;
+							if (i == 1 && opponent == 1 && faceY == 1 && tmp.boardSituation[targetX][targetY]->type == Pawn)
+								return false;
+							if (i == 1 && opponent == 0 && faceY == -1 && tmp.boardSituation[targetX][targetY]->type == Pawn)
+								return false;
+						}
+						break;
+					}
+				}
+			}
+			else {
+				for (int i = 1; i <= 8; i++) {
+					int targetX, targetY;
+					targetX = kingX + i * faceX;
+					targetY = kingY + i * faceY;
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
+					if (tmp.boardSituation[targetX][targetY] != nullptr) {
+						if (tmp.boardSituation[targetX][targetY]->player == opponent) {
+							if (tmp.boardSituation[targetX][targetY]->type == Rook || tmp.boardSituation[targetX][targetY]->type == Queen)
+								return false;
+							if (i == 1 && tmp.boardSituation[targetX][targetY]->type == King)
+								return false;
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+	//check knight
+	for (int faceX = -1; faceX <= 1; faceX++) {
+		for (int faceY = -1; faceY <= 1; faceY++) {
+			if (faceX != 0 && faceY != 0 || faceX == 0 && faceY == 0) {
+				continue;
+			}
+			if (faceX == 1 || faceX == -1) {
+				for (int i = -1; i <= 1; i++) {
+					if (i == 0) continue;
+					int targetX, targetY;
+					targetX = kingX + 2 * faceX;
+					targetY = kingY + i * faceX;
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
+					if (tmp.boardSituation[targetX][targetY] != nullptr) {
+						if (tmp.boardSituation[targetX][targetY]->player == opponent) {
+							if (tmp.boardSituation[targetX][targetY]->type == Knight)
+								return false;
+						}
+					}
+				}
+			}
+			if (faceY == 1 || faceY == -1) {
+				for (int i = -1; i <= 1; i++) {
+					if (i == 0) continue;
+					int targetX, targetY;
+					targetX = kingX + i * faceY;
+					targetY = kingY + 2 * faceY;
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
+					if (tmp.boardSituation[targetX][targetY] != nullptr) {
+						if (tmp.boardSituation[targetX][targetY]->player == opponent) {
+							if (tmp.boardSituation[targetX][targetY]->type == Knight)
+								return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
 void Board::checkMovable(ChessPiece& piece) {
 	piece.movableX.clear();
 	piece.movableY.clear();
@@ -137,7 +245,7 @@ void Board::checkMovable(ChessPiece& piece) {
 	piece.capturableY.clear();
 	piece.epcX.clear();
 	piece.epcY.clear();
-	
+
 	int opponent;
 	if (piece.player == 0) opponent = 1;
 	else opponent = 0;
