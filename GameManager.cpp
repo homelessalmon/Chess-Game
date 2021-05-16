@@ -19,7 +19,7 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 		Point PointStart = Point(x, y);
 		int clickedX = GameManager::ImgtoBoradX(PointStart);
 		int clickedY = GameManager::ImgtoBoradY(PointStart);
-		bool flag = players[currentPlayer]->OwningPiece[pieceNo].move(clickedX, clickedY);
+		bool flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY);
 		viewer.drawBoard();
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
@@ -36,7 +36,6 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 			else {
 				currentPlayer = 0;
 			}
-			renewBoard();
 		}
 
 
@@ -53,9 +52,18 @@ void GameManager::doMouseCallback1(int event, int x, int y, int flags) {
 		Point PointStart = Point(x, y);
 		int clickedX = ImgtoBoradX(PointStart);
 		int clickedY = ImgtoBoradY(PointStart);
+		/*if (currentPlayer == board.boardSituation[clickedX][clickedY]->player) {
+			board.checkMovable(*board.boardSituation[clickedX][clickedY]);
+			viewer.drawMovable(board, clickedX, clickedY);
+			imshow("Chess Game", viewer.Screen);
+			status = 1;
+			startX = clickedX;
+			startY = clickedY;
+		}*/
+
 		for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
 			if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
-				viewer.drawMovable(players[currentPlayer]->OwningPiece[i]);
+				viewer.drawMovable(board, clickedX, clickedY);
 				imshow("Chess Game", viewer.Screen);
 				status = 1;
 				pieceNo = i;
@@ -99,6 +107,7 @@ void GameManager::exe() {
 	}
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	imshow("Chess Game", viewer.Screen);
+	renewBoard();
 	currentPlayer = 0;
 	status = 0;
 	while (1) {
