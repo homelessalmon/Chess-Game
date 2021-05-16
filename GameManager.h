@@ -11,7 +11,7 @@ typedef class ChessPiece ChessPiece;
 class GameManager {
 public:
 	Player* players[2];
-	int current_player;
+	int currentPlayer;
 	Board board;
 	Viewer viewer;
 	// int boardSituation[8][8]; //可能會用到？
