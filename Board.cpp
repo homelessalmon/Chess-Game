@@ -329,3 +329,11 @@ void Board::capture(Player& player, int i)
 {
 	player.OwningPiece.erase(player.OwningPiece.begin() + i);
 }
+
+void Board::beCastling(ChessPiece& piece, int x) {
+	boardSituation[x][piece.posY] = boardSituation[piece.posX][piece.posY];
+	boardSituation[piece.posX][piece.posY] = nullptr;
+	piece.posX = x;
+	piece.moved++;
+	return;
+}
