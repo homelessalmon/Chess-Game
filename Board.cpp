@@ -287,7 +287,7 @@ void Board::checkMovable(ChessPiece& piece) {
 	}
 }
 
-bool Board::move(ChessPiece& piece, int x, int y, Player** players) {
+bool Board::move(ChessPiece &piece, int x, int y, Player** players) {
 	checkMovable(piece);
 	for (int i = 0; i < piece.movableX.size(); i++) {
 		if (piece.movableX[i] == x && piece.movableY[i] == y) {
@@ -325,8 +325,7 @@ bool Board::move(ChessPiece& piece, int x, int y, Player** players) {
 	return false;
 }
 
-void Board::capture(Player& player, int i)
-{
+void Board::capture(Player &player, int i) {
 	player.OwningPiece.erase(player.OwningPiece.begin() + i);
 }
 
