@@ -109,9 +109,23 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
 			//undo
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
+			}
+			imshow("Chess Game", viewer.Screen);
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
 			//redo
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
+			}
+			imshow("Chess Game", viewer.Screen);
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
 			//FF.
