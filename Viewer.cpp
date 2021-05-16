@@ -65,7 +65,6 @@ void Viewer::drawBoard() {
 	}
 	string text = "Chess Game";
 	double font_scale = 1;
-
 	int baseline;
 	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	int x = Screen.cols / 2 - text_size.width / 2;
@@ -87,6 +86,51 @@ void Viewer::drawBoard() {
 		int y = SIZE * (9.5 - i) + text_size.height / 2;
 		putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 	}
+}
+
+void Viewer::drawButton(int undo, int redo) {
+	string text = "undo";
+	double font_scale = 0.5;
+	int thickness = 1;
+	int baseline;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = SIZE * 9.5 - text_size.width / 2;
+	int y = SIZE * 2.125 + text_size.height;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	if (undo == 1) {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(82, 173, 97), -1);
+	}
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(0, 0, 0), thickness);
+	
+	text = "redo";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 9.5 - text_size.width / 2;
+	y = SIZE * 3.125 + text_size.height;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	if (undo == 1) {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(82, 173, 97), -1);
+	}
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(0, 0, 0), thickness);
+
+	text = "FF.";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 9.5 - text_size.width / 2;
+	y = SIZE * 6.125 + text_size.height;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(31, 23, 176), -1);
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(0, 0, 0), thickness);
+	
+	
+}
+
+void Viewer::drawTurn(int player) {
+	if (player == 0) {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 4.625), Point(SIZE * 9.875, SIZE * 5.375), Scalar(255, 255, 255), -1);
+	}
+	else {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 4.625), Point(SIZE * 9.875, SIZE * 5.375), Scalar(0, 0, 0), -1);
+	}
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 4.625), Point(SIZE * 9.875, SIZE * 5.375), Scalar(127, 127, 127), 1);
 }
 
 void Viewer::drawChess(ChessPiece piece) {
@@ -164,4 +208,8 @@ void Viewer::drawMovable(Board board, int x, int y) {
 		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(31, 23, 176), -1);
 		drawChess(*board.boardSituation[board.boardSituation[x][y]->capturableX[i]][board.boardSituation[x][y]->capturableY[i]]);
 	}
+}
+
+void Viewer::drawPromotingTips(int player) {
+
 }
