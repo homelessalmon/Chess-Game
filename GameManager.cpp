@@ -44,7 +44,7 @@ void GameManager::doMouseCallback2(int event, int x, int y, int flags) {
 		imshow("Chess Game", viewer.Screen);
 		status = 0;
 		if (flag) {
-
+			renewBoard();
 			if (currentPlayer == 0) {
 				currentPlayer = 1;
 			}
