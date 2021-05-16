@@ -21,7 +21,7 @@ public:
 	int currentPlayer;
 	Board board;
 	Viewer viewer;
-	// int boardSituation[8][8]; //可能會用到？
+	string logTemp;
 
 
 	void exe();
@@ -40,8 +40,9 @@ private:
 	Status status;
 	int pieceNo;
 #if TEST == 1
-	int startX;
-	int startY;
+	char startX;
+	char startY;
+	char captured;
 	vector<ChessPiece> testPiece;
 #endif // TEST == 1
 };
