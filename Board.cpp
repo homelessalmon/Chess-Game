@@ -267,7 +267,7 @@ void Board::checkMovable(ChessPiece& piece) {
 				if (i == 0) continue;
 				int targetX, targetY;
 				targetX = piece.posX + i * 1;
-				targetY = piece.posY + 1;
+				targetY = piece.posY - 1;
 				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
 
 				if (boardSituation[targetX][targetY] != NULL) {
@@ -304,7 +304,7 @@ bool Board::move(ChessPiece& piece, int x, int y, Player** players) {
 	}
 	for (int i = 0; i < piece.capturableX.size(); i++) {
 		int idx;
-		if (piece.capturableX[i] == x && piece.capturableX[i] == y) {
+		if (piece.capturableX[i] == x && piece.capturableY[i] == y) {
 			for (idx = 0; idx < players[boardSituation[x][y]->player]->OwningPiece.size(); idx++) {
 				if (players[boardSituation[x][y]->player]->OwningPiece[idx].posX == x && players[boardSituation[x][y]->player]->OwningPiece[idx].posY == y) {
 					break;
