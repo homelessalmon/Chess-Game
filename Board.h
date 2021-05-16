@@ -7,6 +7,7 @@ public:
 	ChessPiece* boardSituation [8][8];
 	void checkMovable(ChessPiece &piece);
 	bool move(ChessPiece &piece, int x, int y);
+	void beCastling(ChessPiece &piece, int x);
 	/*Board();
 	Board(Player* players[2]);*/
 };
