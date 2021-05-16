@@ -23,6 +23,8 @@ public:
 
 	vector<int> movableX;
 	vector<int> movableY;
+	vector<int> capturableX;
+	vector<int> capturableY;
 
 	//void checkMovable();
 	//bool move(int x, int y);
