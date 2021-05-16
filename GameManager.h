@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "Player.h"
 #include "Board.h"
 #include "Viewer.h"
@@ -24,9 +25,12 @@ public:
 	void doMouseCallback2(int event, int x, int y, int flags);
 
 	void renewBoard();
-
-#if TEST == 1
+private:
 	int status;
+	int startX;
+	int startY;
+#if TEST == 1
+
 	int pieceNo;
 	vector<ChessPiece> testPiece;
 
