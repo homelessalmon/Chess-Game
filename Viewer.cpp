@@ -352,8 +352,11 @@ void Viewer::drawStalemate(int loser) {
 	if (loser == 1) {
 		winner = Scalar(0, 0, 0);
 	}
-	else {
+	else if (loser == 0) {
 		winner = Scalar(255, 255, 255);
+	}
+	else {
+		winner = Scalar(0, 0, 0);
 	}
 	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), Scalar(200, 200, 200), -1);
 	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), winner, 1);
@@ -368,8 +371,11 @@ void Viewer::drawStalemate(int loser) {
 	if (loser == 1) {
 		text = "Black can't move.";
 	}
-	else {
+	else if (loser == 0) {
 		text = "White can't move.";
+	}
+	else {
+		text = "Time's up.";
 	}
 	font_scale = 0.5;
 	thickness = 1;
