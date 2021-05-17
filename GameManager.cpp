@@ -216,8 +216,6 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 	}
 }
 
-
-
 void GameManager::mouseCallbackStandby(int event, int x, int y, int flags, void* param) {
 	GameManager* self = static_cast<GameManager*>(param);
 	self->doMouseCallbackStandby(event, x, y, flags);
@@ -238,24 +236,52 @@ void GameManager::renewBoard() {
 	}
 }
 
-void GameManager::exe() {
-	viewer.drawBoard();
-	for (int i = 0; i < 2; i++) {
-		players[i] = new Player(i);
-		//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
-	}
-	for (int j = 0; j < 2; j++) {
-		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
-			viewer.drawChess(players[j]->OwningPiece[i]);
+void GameManager::domouseCallbackMenu(int event, int x, int y, int flags) {
+	if (event == EVENT_LBUTTONUP) {
+		if (x >= SIZE && x <= SIZE * 4.5 && y >= SIZE * 7 && y <= SIZE * 8) {
+			status = NewGame;
+		}
+		// else if
+		else {
+			//
 		}
 	}
-	int undoable = 0, redoable = 0;
-	viewer.drawButton(undoable, redoable);
-	currentPlayer = 0;
-	viewer.drawTurn(currentPlayer);
+}
+
+void GameManager::mouseCallbackMenu(int event, int x, int y, int flags, void* param) {
+	GameManager* self = static_cast<GameManager*>(param);
+	self->domouseCallbackMenu(event, x, y, flags);
+}
+
+void GameManager::exe() {
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
+	viewer.drawMenu();
 	imshow("Chess Game", viewer.Screen);
-	renewBoard();
+	while (1) {
+		setMouseCallback("Chess Game", mouseCallbackMenu, this);
+		waitKey(100);
+		if (status != Menu) {
+			break;
+		}
+	}
+	if (status == NewGame) {
+		viewer.drawBoard();
+		for (int i = 0; i < 2; i++) {
+			players[i] = new Player(i);
+			//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
+		}
+		for (int j = 0; j < 2; j++) {
+			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+				viewer.drawChess(players[j]->OwningPiece[i]);
+			}
+		}
+		int undoable = 0, redoable = 0;
+		viewer.drawButton(undoable, redoable);
+		currentPlayer = 0;
+		viewer.drawTurn(currentPlayer);
+		imshow("Chess Game", viewer.Screen);
+		renewBoard();
+	}
 	status = Standby;
 	while (1) {
 		switch (status) {
