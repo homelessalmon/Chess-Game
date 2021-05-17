@@ -7,7 +7,7 @@
 #include "ChessPiece.h"
 using namespace std;
 typedef class ChessPiece ChessPiece;
-#define TEST 1
+#define TEST 0
 
 enum Status {
 	Menu,
@@ -15,7 +15,10 @@ enum Status {
 	Continue,
 	Standby,
 	Moving,
-	Promoting
+	Promoting,
+	Checkmate,
+	Stalemate,
+	End
 };
 
 class GameManager {
@@ -33,10 +36,12 @@ public:
 	static void mouseCallbackStandby(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackMoving(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackPromoting(int event, int x, int y, int flags, void* param);
+	static void mouseCallbackEnd(int event, int x, int y, int flags, void* param);
 	void domouseCallbackMenu(int event, int x, int y, int flags);
 	void doMouseCallbackStandby(int event, int x, int y, int flags);
 	void doMouseCallbackMoving(int event, int x, int y, int flags);
 	void doMouseCallbackPromoting(int event, int x, int y, int flags);
+	void doMouseCallbackEnd(int event, int x, int y, int flags);
 	void done();
 	void renewBoard();
 	static int ImgtoBoradX(Point P); //得出P點對應的棋盤X座標
@@ -45,13 +50,10 @@ public:
 private:
 	Status status;
 	int pieceNo;
-#if TEST == 1
 	char startX;
 	char startY;
 	char captured;
+#if TEST == 1
 	vector<ChessPiece> testPiece;
 #endif // TEST == 1
 };
-
-void undo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players);
-void redo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players);
