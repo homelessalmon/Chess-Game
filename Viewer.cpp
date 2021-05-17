@@ -114,7 +114,7 @@ void Viewer::drawBoard() {
 	}
 }
 
-void Viewer::drawButton(int undo, int redo) {
+void Viewer::drawButton(int undo, int redo, int FF) {
 	string text = "undo";
 	double font_scale = 0.5;
 	int thickness = 1;
@@ -143,7 +143,12 @@ void Viewer::drawButton(int undo, int redo) {
 	x = SIZE * 9.5 - text_size.width / 2;
 	y = SIZE * 6.125 + text_size.height;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
-	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(31, 23, 176), -1);
+	if (FF == 1) {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(31, 23, 176), -1);
+	}
+	else {
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(127, 127, 127), -1);
+	}
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(0, 0, 0), thickness);
 
 
@@ -215,14 +220,6 @@ void Viewer::drawChess(ChessPiece piece) {
 	mergeImg(Screen, chessImg, A);
 }
 
-//void Viewer::drawMovable(ChessPiece piece) {
-//	
-//	for (int i = 0; i < piece.movableX.size(); i++) {
-//		Point A = BoradtoImg(piece.movableX[i], piece.movableY[i]);
-//		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(82, 173, 97), -1);
-//	}
-//}
-
 void Viewer::drawMovable(Board board, int x, int y) {
 	board.checkMovable(*board.boardSituation[x][y]);
 	for (int i = 0; i < board.boardSituation[x][y]->movableX.size(); i++) {
@@ -241,8 +238,15 @@ void Viewer::drawMovable(Board board, int x, int y) {
 }
 
 void Viewer::drawPromotingTips(int player) {
+	Scalar color;
+	if (player == 1) {
+		color = Scalar(0, 0, 0);
+	}
+	else {
+		color = Scalar(255, 255, 255);
+	}
 	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(200, 200, 200), -1);
-	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), Scalar(0, 0, 0), 1);
+	rectangle(Screen, Point(SIZE * 2.125, SIZE * 3.625), Point(SIZE * 7.875, SIZE * 6.375), color, 1);
 	string text = "Promotion";
 	double font_scale = 1;
 	int baseline;
@@ -250,9 +254,9 @@ void Viewer::drawPromotingTips(int player) {
 	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	int x = Screen.cols / 2 - text_size.width / 2;
 	int y = SIZE * 4.5 + text_size.height / 2;
-	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	putText(Screen, text, Point(x, y), 0, font_scale, color, thickness);
 	for (int i = 0; i < 4; i++) {
-		rectangle(Screen, Point(SIZE * (2.8125 + i * 1.125), SIZE * 5), Point(SIZE * (3.8125 + i * 1.125), SIZE * 6), Scalar(0, 0, 0), 1);
+		rectangle(Screen, Point(SIZE * (2.8125 + i * 1.125), SIZE * 5), Point(SIZE * (3.8125 + i * 1.125), SIZE * 6), color, thickness);
 		Mat chessImg;
 		switch (i) {
 		case 0:
@@ -302,4 +306,81 @@ void Viewer::drawCheck(ChessPiece piece) {
 	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(31, 23, 176), -1);
 	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
 	drawChess(piece);
+}
+
+void Viewer::drawCheckmate(int loser) {
+	Scalar winner;
+	if (loser == 0) {
+		winner = Scalar(0, 0, 0);
+	}
+	else {
+		winner = Scalar(255, 255, 255);
+	}
+	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), Scalar(200, 200, 200), -1);
+	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), winner, 1);
+	string text = "CHECKMATE!";
+	double font_scale = 1.5;
+	int baseline;
+	int thickness = 2;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE * 4.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	if (loser == 0) {
+		text = "Black won.";
+	}
+	else {
+		text = "White won.";
+	}
+	font_scale = 1;
+	thickness = 1;
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = Screen.cols / 2 - SIZE - text_size.width / 2;
+	y = SIZE * 5.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	rectangle(Screen, Point(SIZE * 6.25, SIZE * 5.25), Point(SIZE * 7.75, SIZE * 5.75), winner, 1);
+	text = "menu";
+	font_scale = 0.5;
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 7 - text_size.width / 2;
+	y = SIZE * 5.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+}
+
+void Viewer::drawStalemate(int loser) {
+	Scalar winner;
+	if (loser == 0) {
+		winner = Scalar(0, 0, 0);
+	}
+	else {
+		winner = Scalar(255, 255, 255);
+	}
+	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), Scalar(200, 200, 200), -1);
+	rectangle(Screen, Point(SIZE * 2, SIZE * 4), Point(SIZE * 8, SIZE * 6), winner, 1);
+	string text = "Stalemate";
+	double font_scale = 1.5;
+	int baseline;
+	int thickness = 2;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE * 4.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	if (loser == 0) {
+		text = "Black can't move.";
+	}
+	else {
+		text = "White can't move.";
+	}
+	font_scale = 0.5;
+	thickness = 1;
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = Screen.cols / 2 - SIZE - text_size.width / 2;
+	y = SIZE * 5.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	rectangle(Screen, Point(SIZE * 6.25, SIZE * 5.25), Point(SIZE * 7.75, SIZE * 5.75), winner, 1);
+	text = "menu";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 7 - text_size.width / 2;
+	y = SIZE * 5.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
 }
