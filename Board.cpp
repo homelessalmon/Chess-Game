@@ -20,8 +20,7 @@
 //	}
 //}
 
-bool Board::kingCheck(ChessPiece& piece, int opponent, int x, int y)
-{
+bool Board::kingCheck(ChessPiece& piece, int opponent, int x, int y) {
 	Board tmp;
 	for (int j = 0; j < 8; j++) {
 		for (int i = 0; i < 8; i++) {
@@ -130,8 +129,7 @@ bool Board::kingCheck(ChessPiece& piece, int opponent, int x, int y)
 	return true;
 }
 
-bool Board::checkCheck(int opponent)
-{
+bool Board::checkCheck(int opponent) {
 	int player;
 	if (opponent == 1) {
 		player = 0;
@@ -290,14 +288,14 @@ void Board::checkMovable(ChessPiece& piece) {
 		// todo
 		if (piece.moved == 0) {
 			//短
-			if (boardSituation[piece.posX + 1][piece.posY] == nullptr && boardSituation[piece.posX + 2][piece.posY] == nullptr && boardSituation[piece.posX + 3][piece.posY]->type == Rook && boardSituation[piece.posX + 3][piece.posY]->moved == 0) {
+			if (boardSituation[piece.posX + 3][piece.posY] != nullptr && boardSituation[piece.posX + 1][piece.posY] == nullptr && boardSituation[piece.posX + 2][piece.posY] == nullptr && boardSituation[piece.posX + 3][piece.posY]->type == Rook && boardSituation[piece.posX + 3][piece.posY]->moved == 0) {
 				if (kingCheck(piece, opponent, piece.posX + 2, piece.posY)) {
 					piece.movableX.push_back(piece.posX + 2);
 					piece.movableY.push_back(piece.posY);
 				}
 			}
 			//長
-			if (boardSituation[piece.posX - 1][piece.posY] == nullptr && boardSituation[piece.posX - 2][piece.posY] == nullptr && boardSituation[piece.posX - 3][piece.posY] == nullptr && boardSituation[piece.posX - 4][piece.posY]->type == Rook && boardSituation[piece.posX - 4][piece.posY]->moved == 0) {
+			if (boardSituation[piece.posX - 4][piece.posY] != nullptr && boardSituation[piece.posX - 1][piece.posY] == nullptr && boardSituation[piece.posX - 2][piece.posY] == nullptr && boardSituation[piece.posX - 3][piece.posY] == nullptr && boardSituation[piece.posX - 4][piece.posY]->type == Rook && boardSituation[piece.posX - 4][piece.posY]->moved == 0) {
 				if (kingCheck(piece, opponent, piece.posX - 2, piece.posY)) {
 					piece.movableX.push_back(piece.posX - 2);
 					piece.movableY.push_back(piece.posY);
