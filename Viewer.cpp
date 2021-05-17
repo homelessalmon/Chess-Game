@@ -349,7 +349,7 @@ void Viewer::drawCheckmate(int loser) {
 
 void Viewer::drawStalemate(int loser) {
 	Scalar winner;
-	if (loser == 0) {
+	if (loser == 1) {
 		winner = Scalar(0, 0, 0);
 	}
 	else {
@@ -365,7 +365,7 @@ void Viewer::drawStalemate(int loser) {
 	int x = Screen.cols / 2 - text_size.width / 2;
 	int y = SIZE * 4.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
-	if (loser == 0) {
+	if (loser == 1) {
 		text = "Black can't move.";
 	}
 	else {
