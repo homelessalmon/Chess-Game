@@ -29,6 +29,14 @@ void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* par
 
 void GameManager::done() {
 	l_log.push_back(logTemp); //這個是log
+	log.open("log.txt", ios::out || ios::trunc);
+	for (int i = 0; i < l_log.size(); i++)
+	{
+		log << l_log[i] << endl;
+	}
+	l_log.clear();
+	log.flush(); log.close();//這個是希望每動一次就flush
+
 	renewBoard();
 	viewer.drawBoard();
 	for (int j = 0; j < 2; j++) {
@@ -295,9 +303,10 @@ void GameManager::exe() {
 	{
 		need_load = false;
 	}
-	while (log >> tmp_string) { l_log.push_back(tmp_string); }
+	while (getline(log,tmp_string)) { l_log.push_back(tmp_string); }
 	log.close();
-	
+
+
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
 	imshow("Chess Game", viewer.Screen);
@@ -364,15 +373,7 @@ void GameManager::exe() {
 		}
 		waitKey(100);
 	}
-	/*
-		log.open("log.txt", ios::out || ios::trunc);
-		for (int i = 0; i < l_log.size(); i++)
-		{
-			log << l_log[i] << endl;
-		}
-		l_log.clear();
-		log.flush(); log.close();//這個是希望每動一次就flush
-	*/
+
 }
 
 void undo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players)
