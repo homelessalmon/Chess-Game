@@ -22,6 +22,7 @@ public:
 	Board board;
 	Viewer viewer;
 	string logTemp;
+	bool check = false;
 
 
 	void exe();
@@ -31,7 +32,7 @@ public:
 	void doMouseCallbackStandby(int event, int x, int y, int flags);
 	void doMouseCallbackMoving(int event, int x, int y, int flags);
 	void doMouseCallbackPromoting(int event, int x, int y, int flags);
-
+	void done();
 	void renewBoard();
 	static int ImgtoBoradX(Point P); //得出P點對應的棋盤X座標
 	static int ImgtoBoradY(Point P); //得出P點對應的棋盤Y座標
