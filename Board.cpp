@@ -265,23 +265,17 @@ void Board::checkMovable(ChessPiece& piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
-					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
-
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
 					if (boardSituation[targetX][targetY] != NULL) {
-						if (boardSituation[targetX][targetY]->player == piece.player)
-							break;
-						else {
+						if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
 							piece.capturableX.push_back(targetX);
 							piece.capturableY.push_back(targetY);
-							break;
 						}
+						break;
 					}
-
-					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
-						piece.movableX.push_back(targetX);
-						piece.movableY.push_back(targetY);
-					}
+					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
+					piece.movableX.push_back(targetX);
+					piece.movableY.push_back(targetY);
 				}
 			}
 		}
@@ -313,23 +307,17 @@ void Board::checkMovable(ChessPiece& piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
-					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
-
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
 					if (boardSituation[targetX][targetY] != NULL) {
-						if (boardSituation[targetX][targetY]->player == piece.player)
-							break;
-						else {
+						if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
 							piece.capturableX.push_back(targetX);
 							piece.capturableY.push_back(targetY);
-							break;
 						}
+						break;
 					}
-
-					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
-						piece.movableX.push_back(targetX);
-						piece.movableY.push_back(targetY);
-					}
+					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
+					piece.movableX.push_back(targetX);
+					piece.movableY.push_back(targetY);
 				}
 			}
 		}
@@ -345,27 +333,20 @@ void Board::checkMovable(ChessPiece& piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
-					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
-
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
 					if (boardSituation[targetX][targetY] != NULL) {
-						if (boardSituation[targetX][targetY]->player == piece.player)
-							break;
-						else {
+						if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
 							piece.capturableX.push_back(targetX);
 							piece.capturableY.push_back(targetY);
-							break;
 						}
+						break;
 					}
-
-					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
-						piece.movableX.push_back(targetX);
-						piece.movableY.push_back(targetY);
-					}
+					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
+					piece.movableX.push_back(targetX);
+					piece.movableY.push_back(targetY);
 				}
 			}
 		}
-		// todo
 		break;
 	case Bishop:
 		for (int faceX = -1; faceX <= 1; faceX++) {
@@ -377,27 +358,20 @@ void Board::checkMovable(ChessPiece& piece) {
 					int targetX, targetY;
 					targetX = piece.posX + i * faceX;
 					targetY = piece.posY + i * faceY;
-					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
-					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
-
+					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
 					if (boardSituation[targetX][targetY] != NULL) {
-						if (boardSituation[targetX][targetY]->player == piece.player)
-							break;
-						else {
+						if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
 							piece.capturableX.push_back(targetX);
 							piece.capturableY.push_back(targetY);
-							break;
 						}
+						break;
 					}
-
-					if (targetX >= 0 && targetX < 8 && targetY >= 0 && targetY < 8) {
-						piece.movableX.push_back(targetX);
-						piece.movableY.push_back(targetY);
-					}
+					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
+					piece.movableX.push_back(targetX);
+					piece.movableY.push_back(targetY);
 				}
 			}
 		}
-		// todo
 		break;
 	case Knight:
 		for (int faceX = -1; faceX <= 1; faceX++) {
@@ -455,7 +429,6 @@ void Board::checkMovable(ChessPiece& piece) {
 				}
 			}
 		}
-		// todo
 		break;
 	case Pawn:
 		int j;
@@ -663,8 +636,7 @@ void Board::beCastling(ChessPiece& piece, int x) {
 	return;
 }
 
-bool Board::stalemate(Player& player)
-{
+bool Board::stalemate(Player& player) {
 	for (int i = 0; i < player.OwningPiece.size(); i++) {
 		checkMovable(player.OwningPiece[i]);
 		if (player.OwningPiece[i].movableX.size() != 0 || player.OwningPiece[i].capturableX.size() != 0) {
@@ -674,8 +646,7 @@ bool Board::stalemate(Player& player)
 	return true;
 }
 
-bool Board::checkmate(Player& player, int opponent)
-{
+bool Board::checkmate(Player& player, int opponent) {
 	if (stalemate(player) && !checkCheck(opponent)) {
 		return true;
 	}
