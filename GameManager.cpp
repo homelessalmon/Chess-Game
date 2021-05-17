@@ -239,7 +239,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					viewer.drawChess(players[j]->OwningPiece[i]);
 				}
 			}
-			viewer.drawButton(1, 1, 0);
+			viewer.drawButton(1, 1, 1);
 			if (currentPlayer == 0) {
 				currentPlayer = 1;
 			}
@@ -258,7 +258,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					viewer.drawChess(players[j]->OwningPiece[i]);
 				}
 			}
-			viewer.drawButton(1, 1, 0);
+			viewer.drawButton(1, 1, 1);
 			if (currentPlayer == 0) {
 				currentPlayer = 1;
 			}
