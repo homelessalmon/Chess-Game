@@ -10,6 +10,7 @@ typedef class ChessPiece ChessPiece;
 class Viewer {
 public:
 	Viewer();
+	void drawMenu();
 	void drawBoard(); //繪製棋盤、底板
 	void drawButton(int undo, int redo);
 	void drawTurn(int player);
