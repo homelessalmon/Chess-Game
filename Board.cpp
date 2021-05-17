@@ -667,7 +667,7 @@ bool Board::stalemate(Player& player)
 {
 	for (int i = 0; i < player.OwningPiece.size(); i++) {
 		checkMovable(player.OwningPiece[i]);
-		if (player.OwningPiece[i].movableX.size() == 0 && player.OwningPiece[i].capturableX.size() == 0) {
+		if (player.OwningPiece[i].movableX.size() != 0 || player.OwningPiece[i].capturableX.size() != 0) {
 			return false;
 		}
 	}
