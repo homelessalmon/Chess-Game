@@ -370,6 +370,7 @@ void GameManager::exe() {
 		{
 			log << l_log[i] << endl;
 		}
+		l_log.clear();
 		log.flush(); log.close();//這個是希望每動一次就flush
 	*/
 }
