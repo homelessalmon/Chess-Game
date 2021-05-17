@@ -40,6 +40,7 @@ void GameManager::done() {
 		}
 	}
 	viewer.drawTurn(currentPlayer);
+	viewer.drawButton(1, 1);
 	imshow("Chess Game", viewer.Screen);
 }
 
@@ -161,8 +162,9 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 					}
 				}
 			}
+			viewer.drawTurn(currentPlayer);
+			viewer.drawButton(1, 1);
 		}
-
 		imshow("Chess Game", viewer.Screen);
 	}
 }
