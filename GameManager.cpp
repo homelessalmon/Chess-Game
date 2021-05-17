@@ -29,10 +29,10 @@ void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* par
 
 void GameManager::done() {
 	l_log.push_back(logTemp); //這個是log
-	cout << endl;
-	for (int i = 0; i < l_log.size(); i++) {
-		cout << l_log[i] << endl;
-	}
+	//cout << endl;
+	//for (int i = 0; i < l_log.size(); i++) {
+	//	cout << l_log[i] << endl;
+	//}
 	ofstream tmp_log;
 	tmp_log.open("log.txt", ios::out || ios::trunc);
 	for (int i = 0; i < l_log.size(); i++) {
@@ -302,7 +302,9 @@ void GameManager::domouseCallbackMenu(int event, int x, int y, int flags) {
 		if (x >= SIZE && x <= SIZE * 4.5 && y >= SIZE * 7 && y <= SIZE * 8) {
 			status = NewGame;
 		}
-		// else if
+		else if (x >= SIZE * 5.5 && x <= SIZE * 9 && y >= SIZE * 7 && y <= SIZE * 8) {
+			status = Continue;
+		}
 		else {
 			//
 		}
@@ -356,6 +358,9 @@ void GameManager::exe() {
 		imshow("Chess Game", viewer.Screen);
 		renewBoard();
 	}
+	else if (status = Continue) {
+		exit(0);
+	}
 	int tick = 0;
 	int sec = 0, min = 0;
 	cout << endl;
@@ -383,7 +388,7 @@ void GameManager::exe() {
 				sec = 0;
 				min++;
 			}
-			if (min == 5) {
+			if (min == 10) {
 				status = Stalemate;
 				currentPlayer = 2;
 				viewer.drawButton(1, 1, 0);
