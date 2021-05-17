@@ -16,6 +16,7 @@ public:
 	void drawChess(ChessPiece piece); //繪製piece對應的棋子
 	void drawMovable(Board board, int x, int y); //繪製piece可走的方格
 	void drawPromotingTips(int player);
+	void drawCheck(ChessPiece piece);
 	Mat Screen;
 private:
 	Point BoradtoImg(int x, int y); //得出某棋盤格左上角的座標
