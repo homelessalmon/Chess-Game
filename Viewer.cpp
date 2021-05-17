@@ -202,10 +202,12 @@ void Viewer::drawMovable(Board board, int x, int y) {
 	for (int i = 0; i < board.boardSituation[x][y]->movableX.size(); i++) {
 		Point A = BoradtoImg(board.boardSituation[x][y]->movableX[i], board.boardSituation[x][y]->movableY[i]);
 		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(82, 173, 97), -1);
+		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
 	}
 	for (int i = 0; i < board.boardSituation[x][y]->capturableX.size(); i++) {
 		Point A = BoradtoImg(board.boardSituation[x][y]->capturableX[i], board.boardSituation[x][y]->capturableY[i]);
 		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(31, 23, 176), -1);
+		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
 		drawChess(*board.boardSituation[board.boardSituation[x][y]->capturableX[i]][board.boardSituation[x][y]->capturableY[i]]);
 	}
 }
@@ -265,4 +267,11 @@ void Viewer::drawPromotingTips(int player) {
 		A.y += (SIZE - chessImg.rows) / 2;
 		mergeImg(Screen, chessImg, A);
 	}
+}
+
+void Viewer::drawCheck(ChessPiece piece) {
+	Point A = BoradtoImg(piece.posX, piece.posY);
+	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(31, 23, 176), -1);
+	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
+	drawChess(piece);
 }
