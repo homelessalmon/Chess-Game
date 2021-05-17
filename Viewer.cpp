@@ -10,6 +10,31 @@ Viewer::Viewer() {
 	Screen = Mat(SIZE * 10, SIZE * 10, CV_8UC3, Scalar(200, 200, 200));
 }
 
+void Viewer::drawMenu() {
+	string text = "Chess Game";
+	int thickness = 2;
+	double font_scale = 2;
+	int baseline;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = Screen.rows / 2 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	rectangle(Screen, Point(SIZE * 1, SIZE * 7), Point(SIZE * 4.5, SIZE * 8), Scalar(0, 0, 0), 2);
+	text = "New Game";
+	font_scale = 1;
+	thickness = 1;
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 2.75 - text_size.width / 2;
+	y = SIZE * 7.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	rectangle(Screen, Point(SIZE * 5.5, SIZE * 7), Point(SIZE * 9, SIZE * 8), Scalar(0, 0, 0), 2);
+	text = "Continue";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 7.25 - text_size.width / 2;
+	y = SIZE * 7.5 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+}
+
 Point Viewer::BoradtoImg(int x, int y) {
 	Point A;
 	A.x = SIZE * (x + 1);
