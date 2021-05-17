@@ -333,6 +333,9 @@ void GameManager::exe() {
 		imshow("Chess Game", viewer.Screen);
 		renewBoard();
 	}
+	int tick = 0;
+	int sec = 0, min = 0;
+	cout << endl;
 	status = Standby;
 	while (status == Standby || status == Moving || status == Promoting) {
 		switch (status) {
@@ -349,6 +352,21 @@ void GameManager::exe() {
 			break;
 		}
 		waitKey(100);
+		tick++;
+		if (sec >= 60) {
+			sec -= 60;
+			min++;
+		}
+		if (tick >= 10) {
+			tick -= 10;
+			sec++;
+			if (sec < 10) {
+				cout << min << ":0" << sec << '\r';
+			}
+			else {
+				cout << min << ":" << sec << '\r';
+			}
+		}
 	}
 	setMouseCallback("Chess Game", mouseCallbackEnd, this);
 	waitKey(3000);
