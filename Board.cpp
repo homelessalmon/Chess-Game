@@ -662,3 +662,23 @@ void Board::beCastling(ChessPiece& piece, int x) {
 	piece.moved++;
 	return;
 }
+
+bool Board::stalemate(Player& player)
+{
+	for (int i = 0; i < player.OwningPiece.size(); i++) {
+		checkMovable(player.OwningPiece[i]);
+		if (player.OwningPiece[i].movableX.size() != 0 && player.OwningPiece[i].capturableX.size() != 0) {
+			return false;
+		}
+	}
+	return true;
+}
+
+bool Board::checkmate(Player& player, int opponent)
+{
+	if (stalemate(player) && !checkCheck(opponent)) {
+		return true;
+	}
+	else
+		return false;
+}
