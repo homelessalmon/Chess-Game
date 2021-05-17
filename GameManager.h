@@ -29,6 +29,8 @@ public:
 	Viewer viewer;
 	string logTemp;
 	bool check = false;
+	vector<string> stack, l_log;
+	fstream log;
 
 
 	void exe();
