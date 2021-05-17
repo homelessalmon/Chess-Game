@@ -10,6 +10,9 @@ typedef class ChessPiece ChessPiece;
 #define TEST 1
 
 enum Status {
+	Menu,
+	NewGame,
+	Continue,
 	Standby,
 	Moving,
 	Promoting
@@ -26,9 +29,11 @@ public:
 
 
 	void exe();
+	static void mouseCallbackMenu(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackStandby(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackMoving(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackPromoting(int event, int x, int y, int flags, void* param);
+	void domouseCallbackMenu(int event, int x, int y, int flags);
 	void doMouseCallbackStandby(int event, int x, int y, int flags);
 	void doMouseCallbackMoving(int event, int x, int y, int flags);
 	void doMouseCallbackPromoting(int event, int x, int y, int flags);
