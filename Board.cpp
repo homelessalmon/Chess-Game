@@ -261,22 +261,20 @@ void Board::checkMovable(ChessPiece& piece) {
 				if (faceX == 0 && faceY == 0) {
 					continue;
 				}
-				for (int i = 1; i <= 1; i++) {
-					int targetX, targetY;
-					targetX = piece.posX + i * faceX;
-					targetY = piece.posY + i * faceY;
-					if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) break;
-					if (boardSituation[targetX][targetY] != NULL) {
-						if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
-							piece.capturableX.push_back(targetX);
-							piece.capturableY.push_back(targetY);
-						}
-						break;
+				int targetX, targetY;
+				targetX = piece.posX + faceX;
+				targetY = piece.posY + faceY;
+				if (targetX < 0 || targetY < 0 || targetX > 7 || targetY > 7) continue;
+				if (boardSituation[targetX][targetY] != NULL) {
+					if (boardSituation[targetX][targetY]->player != piece.player && kingCheck(piece, opponent, targetX, targetY)) {
+						piece.capturableX.push_back(targetX);
+						piece.capturableY.push_back(targetY);
 					}
-					if (!kingCheck(piece, opponent, targetX, targetY)) continue;
-					piece.movableX.push_back(targetX);
-					piece.movableY.push_back(targetY);
+					continue;
 				}
+				if (!kingCheck(piece, opponent, targetX, targetY)) continue;
+				piece.movableX.push_back(targetX);
+				piece.movableY.push_back(targetY);
 			}
 		}
 		// todo
