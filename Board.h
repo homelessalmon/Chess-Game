@@ -11,6 +11,8 @@ public:
 	void capture(Player& player, int i);
 	bool kingCheck(ChessPiece&, int, int, int);
 	bool checkCheck(int);
+	bool stalemate(Player&);
+	bool checkmate(Player&, int);
 	/*Board();
 	Board(Player* players[2]);*/
 };
