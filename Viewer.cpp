@@ -76,6 +76,7 @@ bool Viewer::mergeImg(Mat& dst, Mat& src, Point location) {
 }
 
 void Viewer::drawBoard() {
+	rectangle(Screen, Point(0, 0), Point(SIZE * 10, SIZE * 10), Scalar(200, 200, 200), -1);
 	int thickness = 1;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
