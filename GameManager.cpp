@@ -353,13 +353,19 @@ void GameManager::exe() {
 		}
 		waitKey(100);
 		tick++;
-		if (sec >= 60) {
-			sec -= 60;
-			min++;
-		}
 		if (tick >= 10) {
 			tick -= 10;
 			sec++;
+			if (sec == 60) {
+				sec = 0;
+				min++;
+			}
+			if (min == 5) {
+				status = Stalemate;
+				currentPlayer = 2;
+				viewer.drawButton(1, 1, 0);
+				imshow("Chess Game", viewer.Screen);
+			}
 			if (sec < 10) {
 				cout << min << ":0" << sec << '\r';
 			}
