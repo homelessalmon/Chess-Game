@@ -14,6 +14,35 @@ int GameManager::ImgtoBoradY(Point P) {
 	return -(P.y / SIZE - 8);
 }
 
+void GameManager::done() {
+	cout << logTemp << endl; //這個是log
+	renewBoard();
+	viewer.drawBoard();
+	for (int j = 0; j < 2; j++) {
+		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+			viewer.drawChess(players[j]->OwningPiece[i]);
+		}
+	}
+	check = !board.checkCheck(currentPlayer);
+
+	if (currentPlayer == 0) {
+		currentPlayer = 1;
+	}
+	else {
+		currentPlayer = 0;
+	}
+	if (check) {
+		for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+			if (players[currentPlayer]->OwningPiece[i].type == King) {
+				viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+				break;
+			}
+		}
+	}
+	viewer.drawTurn(currentPlayer);
+	imshow("Chess Game", viewer.Screen);
+}
+
 void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
 		if (x >= SIZE * 2.8125 && x <= SIZE * 3.8125 && y >= SIZE * 5 && y <= SIZE * 6) {
@@ -36,22 +65,7 @@ void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 			return;
 		}
 		status = Standby;
-		cout << logTemp << endl; //這個是log
-		renewBoard();
-		viewer.drawBoard();
-		for (int j = 0; j < 2; j++) {
-			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
-				viewer.drawChess(players[j]->OwningPiece[i]);
-			}
-		}
-		imshow("Chess Game", viewer.Screen);
-		if (currentPlayer == 0) {
-			currentPlayer = 1;
-		}
-		else {
-			currentPlayer = 0;
-			viewer.drawTurn(0);
-		}
+		done();
 	}
 }
 
@@ -126,7 +140,6 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 				viewer.drawChess(players[j]->OwningPiece[i]);
 			}
 		}
-		imshow("Chess Game", viewer.Screen);
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == Pawn) {
 			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
 				status = Promoting;
@@ -137,20 +150,20 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		}
 		status = Standby;
 		if (flag) {
-			cout << logTemp << endl; //這個是log
-			renewBoard();
-			if (currentPlayer == 0) {
-				currentPlayer = 1;
-			}
-			else {
-				currentPlayer = 0;
-				viewer.drawTurn(0);
+			done();
+		}
+		else {
+			if (check) {
+				for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+					if (players[currentPlayer]->OwningPiece[i].type == King) {
+						viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+						break;
+					}
+				}
 			}
 		}
 
-		viewer.drawTurn(currentPlayer);
 		imshow("Chess Game", viewer.Screen);
-
 	}
 }
 
