@@ -28,7 +28,7 @@ void Viewer::drawMenu() {
 	y = SIZE * 7.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 	rectangle(Screen, Point(SIZE * 5.5, SIZE * 7), Point(SIZE * 9, SIZE * 8), Scalar(0, 0, 0), 2);
-	text = "Continue";
+	text = "Exit";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 7.25 - text_size.width / 2;
 	y = SIZE * 7.5 + text_size.height / 2;
