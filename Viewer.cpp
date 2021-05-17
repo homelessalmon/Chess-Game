@@ -210,6 +210,8 @@ void Viewer::drawMovable(Board board, int x, int y) {
 		rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
 		drawChess(*board.boardSituation[board.boardSituation[x][y]->capturableX[i]][board.boardSituation[x][y]->capturableY[i]]);
 	}
+	Point B = BoradtoImg(board.boardSituation[x][y]->posX, board.boardSituation[x][y]->posY);
+	rectangle(Screen, B, Point(B.x + SIZE, B.y + SIZE), Scalar(31, 23, 230), 2);
 }
 
 void Viewer::drawPromotingTips(int player) {
