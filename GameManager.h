@@ -5,6 +5,7 @@
 #include "Board.h"
 #include "Viewer.h"
 #include "ChessPiece.h"
+#include <fstream>
 using namespace std;
 typedef class ChessPiece ChessPiece;
 #define TEST 0
