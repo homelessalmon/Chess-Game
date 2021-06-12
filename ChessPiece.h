@@ -15,6 +15,7 @@ enum Type {
 class ChessPiece {
 public:
 	ChessPiece(int player, Type type, int posX, int posY);
+	ChessPiece(int _player, Type _type, int _posX, int _posY, int _epc, int _epcd, int _moved);
 	int posX;
 	int posY;
 	int player; // 0 = 白 1 = 黑
