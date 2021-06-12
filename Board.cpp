@@ -3,6 +3,7 @@
 vector<Board> Board::board_history;
 std::stack<Board> Board::stack;
 Board Board::board = Board::return_now_board();
+int Board::now_player = 0;
 
 Board::Board() {
 	for (int i = 0; i < 8; i++) {
@@ -15,7 +16,11 @@ Board::Board() {
 Board::Board(const Board& B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			this->boardSituation[i][j] = NULL;
+			if (this->boardSituation[i][j] != NULL)
+			{
+				delete this->boardSituation[i][j];
+				this->boardSituation[i][j] = NULL;
+			}
 		}
 	}
 	for (int i = 0; i < 8; i++) {
@@ -69,6 +74,9 @@ void Board::undo() {
 	stack.push(*(board_history.end() - 1));
 	board_history.erase(board_history.end() - 1);
 	write_board();
+	board = return_now_board();
+	if (now_player == 0)now_player = 1;
+	else now_player = 0;
 }
 
 void Board::redo() {
@@ -77,13 +85,20 @@ void Board::redo() {
 		board_history.push_back(stack.top());
 		stack.pop();
 		write_board();
+		board = return_now_board();
+		if (now_player == 0)now_player = 1;
+		else now_player = 0;
 	}
 }
 
 void Board::operator=(Board B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			this->boardSituation[i][j] = NULL;
+			if (this->boardSituation[i][j] != NULL)
+			{
+				delete this->boardSituation[i][j];
+				this->boardSituation[i][j] = NULL;
+			}
 		}
 	}
 	for (int i = 0; i < 8; i++) {
@@ -137,6 +152,8 @@ void Board::load_board() {
 			getline(fin, catch_string);
 		}
 		board_history.push_back(tmp);
+		if (now_player == 0)now_player = 1;
+		else now_player = 0;
 	}
 }
 
