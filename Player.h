@@ -11,15 +11,22 @@ public:
 
 	vector<ChessPiece> OwningPiece;
 	Player(int);
-	//virtual void onMove();
-	bool move(ChessPiece& piece, int x, int y, Player**);
+	virtual bool move(ChessPiece& piece, int x, int y, Player**);
+	virtual void promote(ChessPiece& piece, Type type);
 	void beCastling(ChessPiece& piece, int x);
 	void capture(Player& player, int i);
-	void promote(ChessPiece& piece, Type type);
 };
 
-class AI_player : public Player
+class HumanPlayer : public Player
 {
-	AI_player(int);
+	HumanPlayer(int);
+	//bool move(ChessPiece& piece, int x, int y, Player**) override;
+	//void promote(ChessPiece& piece, Type type) override;
 };
 
+class AIPlayer : public Player
+{
+	AIPlayer(int);
+	//bool move(ChessPiece& piece, int x, int y, Player**) override;
+	//void promote(ChessPiece& piece, Type type) override;
+};
