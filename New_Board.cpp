@@ -1,7 +1,8 @@
 #include "New_Board.h"
 
-vector<New_Board> New_Board::board_history;
-std::stack<New_Board> New_Board::stack;
+vector<Board> Board::board_history;
+std::stack<Board> Board::stack;
+Board Board::board = Board::return_now_board();
 
 ChessPiece::ChessPiece(int _player, Type _type, int _posX, int _posY, int _epc, int _epcd, int _moved)
 {
@@ -14,56 +15,56 @@ ChessPiece::ChessPiece(int _player, Type _type, int _posX, int _posY, int _epc, 
 	moved = _moved;
 }
 
-New_Board::New_Board()
+Board::Board()
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			board[i][j] = NULL;
+			boardSituation[i][j] = NULL;
 		}
 	}
 }
 
-New_Board::New_Board(const New_Board& B)
+Board::Board(const Board& B)
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			this->board[i][j] = NULL;
+			this->boardSituation[i][j] = NULL;
 		}
 	}
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (B.board[i][j] != NULL)
+			if (B.boardSituation[i][j] != NULL)
 			{
-				ChessPiece* tmp = new ChessPiece(B.board[i][j]->player, B.board[i][j]->type, B.board[i][j]->posX, B.board[i][j]->posY, B.board[i][j]->epc, B.board[i][j]->epcd, B.board[i][j]->moved);
-				this->board[i][j] = tmp;
+				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->epcd, B.boardSituation[i][j]->moved);
+				this->boardSituation[i][j] = tmp;
 			}
 		}
 	}
 }
 
-New_Board::~New_Board()
+Board::~Board()
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (board[i][j] != NULL)
+			if (boardSituation[i][j] != NULL)
 			{
-				delete board[i][j];
+				delete boardSituation[i][j];
 			}
 		}
 	}
 }
 
-New_Board New_Board::return_now_board()
+Board Board::return_now_board()
 {
-	New_Board tmp;
+	Board tmp;
 	if (board_history.size() < 1)
 	{
 		return tmp;
@@ -75,26 +76,26 @@ New_Board New_Board::return_now_board()
 	}
 }
 
-vector<ChessPiece> New_Board::return_chess_vector(int _player)
+vector<ChessPiece> Board::return_chess_vector(int _player)
 {
 	if (!(_player == 0 || _player == 1))return vector<ChessPiece>();
-	New_Board B;
+	Board B;
 	B = return_now_board();
 	vector<ChessPiece> r;
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (B.board[i][j] != NULL && B.board[i][j]->player == _player)
+			if (B.boardSituation[i][j] != NULL && B.boardSituation[i][j]->player == _player)
 			{
-				r.push_back(*(B.board[i][j]));
+				r.push_back(*(B.boardSituation[i][j]));
 			}
 		}
 	}
 	return r;
 }
 
-void New_Board::undo()
+void Board::undo()
 {
 	if (board_history.size() < 2)return;
 	stack.push(*(board_history.end() - 1));
@@ -102,7 +103,7 @@ void New_Board::undo()
 	write_board();
 }
 
-void New_Board::redo()
+void Board::redo()
 {
 	if (stack.size() <= 0)return;
 	else
@@ -113,35 +114,35 @@ void New_Board::redo()
 	}
 }
 
-void New_Board::operator=(New_Board B)
+void Board::operator=(Board B)
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			this->board[i][j] = NULL;
+			this->boardSituation[i][j] = NULL;
 		}
 	}
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (B.board[i][j] != NULL)
+			if (B.boardSituation[i][j] != NULL)
 			{
-				ChessPiece* tmp = new ChessPiece(B.board[i][j]->player, B.board[i][j]->type, B.board[i][j]->posX, B.board[i][j]->posY, B.board[i][j]->epc, B.board[i][j]->epcd, B.board[i][j]->moved);
-				this->board[i][j] = tmp;
+				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->epcd, B.boardSituation[i][j]->moved);
+				this->boardSituation[i][j] = tmp;
 			}
 		}
 	}
 }
 
-bool New_Board::operator==(New_Board B)
+bool Board::operator==(Board B)
 {
 	for (int i = 0; i < 8; i++)
 	{
 		for (int j = 0; j < 8; j++)
 		{
-			if (this->board[i][j]->player != B.board[i][j]->player || this->board[i][j]->type != B.board[i][j]->type || this->board[i][j]->posX != B.board[i][j]->posX || this->board[i][j]->posY != B.board[i][j]->posY || this->board[i][j]->epc != B.board[i][j]->epc || this->board[i][j]->epcd != B.board[i][j]->epcd || this->board[i][j]->moved != B.board[i][j]->moved)
+			if (this->boardSituation[i][j]->player != B.boardSituation[i][j]->player || this->boardSituation[i][j]->type != B.boardSituation[i][j]->type || this->boardSituation[i][j]->posX != B.boardSituation[i][j]->posX || this->boardSituation[i][j]->posY != B.boardSituation[i][j]->posY || this->boardSituation[i][j]->epc != B.boardSituation[i][j]->epc || this->boardSituation[i][j]->epcd != B.boardSituation[i][j]->epcd || this->boardSituation[i][j]->moved != B.boardSituation[i][j]->moved)
 			{
 				return false;
 			}
@@ -150,22 +151,22 @@ bool New_Board::operator==(New_Board B)
 	return true;
 }
 
-void New_Board::load_board()
+void Board::load_board()
 {
 	ifstream fin("board_history.txt");
 	if (!fin.is_open())
 	{
-		New_Board::write_init_board();
+		Board::write_init_board();
 	}
 	fin.close();
 
-	New_Board::board_history.clear();
+	Board::board_history.clear();
 	fin.open("board_history.txt");
 
 	
 	while (true)
 	{
-		New_Board tmp;
+		Board tmp;
 		string catch_string;
 		getline(fin, catch_string);
 		if (catch_string == "end")break;
@@ -180,14 +181,14 @@ void New_Board::load_board()
 			ss >> _player >> _type>> _posX >> _posY >> _epc >> _epcd >> _moved;
 			t = static_cast<Type>(_type);
 			ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _epcd, _moved);
-			tmp.board[_posX][_posY] = tmp_p;
+			tmp.boardSituation[_posX][_posY] = tmp_p;
 			getline(fin, catch_string);
 		}
 		board_history.push_back(tmp);
 	}
 }
 
-void New_Board::write_board()
+void Board::write_board()
 {
 	ofstream fout("board_history.txt", ios::trunc);
 	for (int i = 0; i < board_history.size(); i++)
@@ -196,9 +197,9 @@ void New_Board::write_board()
 		{
 			for (int k = 0; k < 8; k++)
 			{
-				if (board_history[i].board[j][k] != NULL)
+				if (board_history[i].boardSituation[j][k] != NULL)
 				{
-					fout << board_history[i].board[j][k]->player << " " << static_cast<int>(board_history[i].board[j][k]->type) << " " << board_history[i].board[j][k]->posX << " " << board_history[i].board[j][k]->posY << " " << board_history[i].board[j][k]->epc << " " << board_history[i].board[j][k]->epcd << " " << board_history[i].board[j][k]->moved << endl;
+					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << board_history[i].boardSituation[j][k]->epcd << " " << board_history[i].boardSituation[j][k]->moved << endl;
 				}
 			}
 		}
@@ -208,7 +209,7 @@ void New_Board::write_board()
 	fout.close();
 }
 
-void New_Board::write_init_board()
+void Board::write_init_board()
 {
 	ifstream fin("board_history.txt");
 	if (!fin.is_open())
