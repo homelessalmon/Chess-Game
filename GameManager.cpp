@@ -28,20 +28,6 @@ void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* par
 }
 
 void GameManager::done() {
-	l_log.push_back(logTemp); //這個是log
-	//cout << endl;
-	//for (int i = 0; i < l_log.size(); i++) {
-	//	cout << l_log[i] << endl;
-	//}
-	ofstream tmp_log;
-	tmp_log.open("log.txt", ios::out || ios::trunc);
-	for (int i = 0; i < l_log.size(); i++) {
-		tmp_log << l_log[i] << endl;
-	}
-	tmp_log.flush();
-	tmp_log.close();
-	//這個是希望每動一次就flush
-
 	renewBoard();
 	viewer.drawBoard();
 	for (int j = 0; j < 2; j++) {
@@ -49,7 +35,7 @@ void GameManager::done() {
 			viewer.drawChess(players[j]->OwningPiece[i]);
 		}
 	}
-	check = !board.checkCheck(currentPlayer);
+	check = !Board::board.checkCheck(currentPlayer);
 	int opponent;
 	if (currentPlayer == 0) {
 		currentPlayer = 1;
@@ -69,11 +55,11 @@ void GameManager::done() {
 	}
 	viewer.drawTurn(currentPlayer);
 	viewer.drawButton(1, 1, 1);
-	if (board.checkmate(*players[currentPlayer], opponent)) {
+	if (checkmate(*players[currentPlayer], opponent)) {
 		status = Checkmate;
 		viewer.drawButton(1, 0, 0);
 	}
-	else if (board.stalemate(*players[currentPlayer])) {
+	else if (stalemate(*players[currentPlayer])) {
 		status = Stalemate;
 		viewer.drawButton(1, 0, 0);
 	}
@@ -83,19 +69,19 @@ void GameManager::done() {
 void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
 		if (x >= SIZE * 2.8125 && x <= SIZE * 3.8125 && y >= SIZE * 5 && y <= SIZE * 6) {
-			players[currentPlayer]->OwningPiece[pieceNo].type = Queen;
+			players[currentPlayer]->promote(players[currentPlayer]->OwningPiece[pieceNo], Queen);
 			logTemp = logTemp + " " + 'Q';
 		}
 		else if (x >= SIZE * 3.9375 && x <= SIZE * 4.9375 && y >= SIZE * 5 && y <= SIZE * 6) {
-			players[currentPlayer]->OwningPiece[pieceNo].type = Rook;
+			players[currentPlayer]->promote(players[currentPlayer]->OwningPiece[pieceNo], Rook);
 			logTemp = logTemp + " " + 'R';
 		}
 		else if (x >= SIZE * 5.0625 && x <= SIZE * 6.0625 && y >= SIZE * 5 && y <= SIZE * 6) {
-			players[currentPlayer]->OwningPiece[pieceNo].type = Bishop;
+			players[currentPlayer]->promote(players[currentPlayer]->OwningPiece[pieceNo], Bishop);
 			logTemp = logTemp + " " + 'B';
 		}
 		else if (x >= SIZE * 6.1875 && x <= SIZE * 7.1875 && y >= SIZE * 5 && y <= SIZE * 6) {
-			players[currentPlayer]->OwningPiece[pieceNo].type = Knight;
+			players[currentPlayer]->promote(players[currentPlayer]->OwningPiece[pieceNo], Knight);
 			logTemp = logTemp + " " + 'K';
 		}
 		else {
@@ -123,26 +109,26 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		char p = currentPlayer + '0';
 		logTemp = logTemp + p + " ";
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == -2) {
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
+			flag = players[currentPlayer]->move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
-				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX + 1][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX - 1);
+				players[currentPlayer]->beCastling(*Board::board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX + 1][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX - 1);
 				logTemp = logTemp + "O-O";
 			}
 
 
 		}
 		else if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == 2) {
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
+			flag = players[currentPlayer]->move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
-				board.beCastling(*board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX - 2][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX + 1);
+				players[currentPlayer]->beCastling(*Board::board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX - 2][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX + 1);
 				logTemp = logTemp + "O-O-O";
 			}
 
 		}
 		else {
 			char captured = 'X';
-			if (board.boardSituation[clickedX][clickedY] != nullptr) {
-				switch (board.boardSituation[clickedX][clickedY]->type) {
+			if (Board::board.boardSituation[clickedX][clickedY] != nullptr) {
+				switch (Board::board.boardSituation[clickedX][clickedY]->type) {
 				case Queen:
 					captured = 'Q';
 					break;
@@ -162,7 +148,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 					break;
 				}
 			}
-			flag = board.move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
+			flag = players[currentPlayer]->move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag) {
 				char endX = clickedX + '0';
 				char endY = clickedY + '0';
@@ -221,7 +207,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 
 			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
 				if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
-					viewer.drawMovable(board, clickedX, clickedY);
+					viewer.drawMovable(Board::board, clickedX, clickedY);
 					imshow("Chess Game", viewer.Screen);
 					status = Moving;
 					pieceNo = i;
@@ -232,7 +218,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
 			//undo
-			undo(stack, l_log, board, players);
+			Board::undo();
 			viewer.drawBoard();
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
@@ -251,7 +237,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
 			//redo
-			redo(stack, l_log, board, players);
+			Board::redo();
 			viewer.drawBoard();
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
@@ -285,11 +271,11 @@ void GameManager::mouseCallbackStandby(int event, int x, int y, int flags, void*
 void GameManager::renewBoard() {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			board.boardSituation[i][j] = nullptr;
+			Board::board.boardSituation[i][j] = nullptr;
 			for (int k = 0; k < 2; k++) {
 				for (int l = 0; l < players[k]->OwningPiece.size(); l++) {
 					if (players[k]->OwningPiece[l].posX == i && players[k]->OwningPiece[l].posY == j) {
-						board.boardSituation[i][j] = &players[k]->OwningPiece[l];
+						Board::board.boardSituation[i][j] = &players[k]->OwningPiece[l];
 					}
 				}
 			}
@@ -317,19 +303,8 @@ void GameManager::mouseCallbackMenu(int event, int x, int y, int flags, void* pa
 }
 
 void GameManager::exe() {
-	//file in
-	log.open("log.txt", ios::in); bool need_load = true; string tmp_string;
-	if (!log.is_open()) {
-		system("cd.>log.txt");
-		log.open("log", ios::in);
-		need_load = false;
-	}
-	else if (log.tellp() == 0) {
-		need_load = false;
-	}
-	while (getline(log, tmp_string)) { l_log.push_back(tmp_string); }
-	log.close();
-
+	Board::load_board();
+	Board::board = Board::return_now_board();
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
 	imshow("Chess Game", viewer.Screen);
@@ -425,438 +400,20 @@ void GameManager::exe() {
 	}
 }
 
-void undo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players) {
-	if (l_log.size() < 1) { return; }
-	stack.push_back(l_log[l_log.size() - 1]);
-	l_log.pop_back();
-	string undo_command = stack[stack.size() - 1].substr(2);
-	if (undo_command == "O-O") {
-		if ((stack[stack.size() - 1])[0] == '0') {
-			board.boardSituation[6][0]->posX = 4;
-			board.boardSituation[4][0] = board.boardSituation[6][0];
-			board.boardSituation[6][0] = NULL;
-			board.boardSituation[4][0]->moved--;
-			board.boardSituation[5][0]->posX = 7;
-			board.boardSituation[7][0] = board.boardSituation[5][0];
-			board.boardSituation[5][0] = NULL;
-			board.boardSituation[7][0]->moved--;
-		}
-		else {
-			board.boardSituation[6][7]->posX = 4;
-			board.boardSituation[4][7] = board.boardSituation[6][7];
-			board.boardSituation[6][7] = NULL;
-			board.boardSituation[4][7]->moved--;
-			board.boardSituation[5][7]->posX = 7;
-			board.boardSituation[7][7] = board.boardSituation[5][7];
-			board.boardSituation[5][7] = NULL;
-			board.boardSituation[7][7]->moved--;
+bool GameManager::stalemate(Player& player) {
+	for (int i = 0; i < player.OwningPiece.size(); i++) {
+		Board::board.checkMovable(player.OwningPiece[i]);
+		if (player.OwningPiece[i].movableX.size() != 0 || player.OwningPiece[i].capturableX.size() != 0) {
+			return false;
 		}
 	}
-	else if (undo_command == "O-O-O") {
-		if ((stack[stack.size() - 1])[0] == '0') {
-			board.boardSituation[2][0]->posX = 4;
-			board.boardSituation[4][0] = board.boardSituation[2][0];
-			board.boardSituation[2][0] = NULL;
-			board.boardSituation[4][0]->moved--;
-			board.boardSituation[3][0]->posX = 0;
-			board.boardSituation[0][0] = board.boardSituation[3][0];
-			board.boardSituation[3][0] = NULL;
-			board.boardSituation[0][0]->moved--;
-		}
-		else {
-			board.boardSituation[2][7]->posX = 4;
-			board.boardSituation[4][7] = board.boardSituation[2][7];
-			board.boardSituation[2][7] = NULL;
-			board.boardSituation[4][7]->moved--;
-			board.boardSituation[3][7]->posX = 7;
-			board.boardSituation[0][7] = board.boardSituation[3][7];
-			board.boardSituation[3][7] = NULL;
-			board.boardSituation[0][7]->moved--;
-		}
-	}
-	else {
-		string undo_command2 = undo_command.substr(8);
-		int x1 = undo_command[0] - '0', y1 = undo_command[2] - '0', x2 = undo_command[4] - '0', y2 = undo_command[6] - '0';
-		if (board.boardSituation[x2][y2]->type == Pawn && (y2 == 0 || y2 == 7)) {
-			if (undo_command2[0] == 'X') {
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[y2][x2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->type = Pawn;
-				board.boardSituation[x1][y1]->moved--;
-			}
-			else if (undo_command2[0] == 'Q') {
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->type = Pawn;
-				board.boardSituation[x1][y1]->moved--;
-				if ((stack[stack.size() - 1])[0] == '0') {
-					board.boardSituation[x2][y2] = new ChessPiece(1, Queen, x2, y2);
-					players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-				else {
-					board.boardSituation[x2][y2] = new ChessPiece(0, Queen, x2, y2);
-					players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-			}
-			else if (undo_command2[0] == 'R') {
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->type = Pawn;
-				board.boardSituation[x1][y1]->moved--;
-				if ((stack[stack.size() - 1])[0] == '0') {
-					board.boardSituation[y2][x2] = new ChessPiece(1, Rook, x2, y2);
-					players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-				else {
-					board.boardSituation[y2][x2] = new ChessPiece(0, Rook, x2, y2);
-					players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-			}
-			else if (undo_command2[0] == 'B') {
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->type = Pawn;
-				board.boardSituation[x1][y1]->moved--;
-				if ((stack[stack.size() - 1])[0] == '0') {
-					board.boardSituation[y2][x2] = new ChessPiece(1, Bishop, x2, y2);
-					players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-				else {
-					board.boardSituation[x2][y2] = new ChessPiece(0, Bishop, x2, y2);
-					players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-			}
-			else if (undo_command2[0] == 'K') {
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->type = Pawn;
-				board.boardSituation[x1][y1]->moved--;
-				if ((stack[stack.size() - 1])[0] == '0') {
-					board.boardSituation[x2][y2] = new ChessPiece(1, Knight, x2, y2);
-					players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-				else {
-					board.boardSituation[x2][y2] = new ChessPiece(0, Knight, x2, y2);
-					players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				}
-			}
-		}//升變結束
-		else if (undo_command2[0] == 'X') {
-			//吃過路兵
-			if (undo_command2.length() > 2) {
-				if ((stack[stack.size() - 1])[0] == '0') {
-					if (x2 - x1 < 0) {
-						board.boardSituation[x2][y2]->posX = x1;
-						board.boardSituation[x2][y2]->posY = y1;
-						board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-						board.boardSituation[x2][y2] = NULL;
-						board.boardSituation[x1][x1]->moved--;
-						board.boardSituation[x1 - 1][y1] = new ChessPiece(1, Pawn, x1 - 1, y1);
-						players[1]->OwningPiece.push_back(*(board.boardSituation[x1 - 1][y1]));
-						board.boardSituation[x1 - 1][y1]->moved++;
-					}
-					else {
-						board.boardSituation[x2][y2]->posX = x1;
-						board.boardSituation[x2][y2]->posY = y1;
-						board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-						board.boardSituation[x2][y2] = NULL;
-						board.boardSituation[x1][y1]->moved--;
-						board.boardSituation[x1 + 1][y1] = new ChessPiece(1, Pawn, x1 + 1, y1);
-						players[1]->OwningPiece.push_back(*(board.boardSituation[x1 + 1][y1]));
-						board.boardSituation[x1 - 1][y1]->moved++;
-					}
-				}
-				else {
-					if (x2 - x1 < 0) {
-						board.boardSituation[x2][y2]->posX = x1;
-						board.boardSituation[x2][y2]->posY = y1;
-						board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-						board.boardSituation[x2][y2] = NULL;
-						board.boardSituation[x1][y1]->moved--;
-						board.boardSituation[x1 - 1][y1] = new ChessPiece(0, Pawn, x1 - 1, y1);
-						players[1]->OwningPiece.push_back(*(board.boardSituation[x1 - 1][y1]));
-						board.boardSituation[x1 - 1][y1]->moved++;
-					}
-					else {
-						board.boardSituation[x2][y2]->posX = x1;
-						board.boardSituation[x2][y2]->posY = y1;
-						board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-						board.boardSituation[x2][y2] = NULL;
-						board.boardSituation[x1][y1]->moved--;
-						board.boardSituation[x1 + 1][y1] = new ChessPiece(0, Pawn, x1 + 1, y1);
-						players[1]->OwningPiece.push_back(*(board.boardSituation[x1 + 1][y1]));
-						board.boardSituation[x1 - 1][y1]->moved++;
-					}
-				}
-			}
-			else {//普通走法
-				board.boardSituation[x2][y2]->posX = x1;
-				board.boardSituation[x2][y2]->posY = y1;
-				board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-				board.boardSituation[x2][y2] = NULL;
-				board.boardSituation[x1][y1]->moved--;
-			}
-		}
-		else if (undo_command2[0] == 'Q') {
-			board.boardSituation[x2][y2]->posX = x1;
-			board.boardSituation[x2][y2]->posY = y1;
-			board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-			board.boardSituation[x2][y2] = NULL;
-			if ((stack[stack.size() - 1])[0] == '0') {
-				board.boardSituation[x2][y2] = new ChessPiece(1, Queen, x2, y2);
-				players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-			else {
-				board.boardSituation[x2][y2] = new ChessPiece(0, Queen, x2, y2);
-				players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-		}
-		else if (undo_command2[0] == 'R') {
-			board.boardSituation[x2][y2]->posX = x1;
-			board.boardSituation[x2][y2]->posY = y1;
-			board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-			board.boardSituation[x2][y2] = NULL;
-			if ((stack[stack.size() - 1])[0] == '0') {
-				board.boardSituation[x2][y2] = new ChessPiece(1, Rook, x2, y2);
-				players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-			else {
-				board.boardSituation[x2][y2] = new ChessPiece(0, Rook, x2, y2);
-				players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-		}
-		else if (undo_command2[0] == 'B') {
-			board.boardSituation[x2][y2]->posY = y1;
-			board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-			board.boardSituation[x2][y2] = NULL;
-			if ((stack[stack.size() - 1])[0] == '0') {
-				board.boardSituation[x2][y2] = new ChessPiece(1, Bishop, x2, y2);
-				players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-			else {
-				board.boardSituation[x2][y2] = new ChessPiece(0, Bishop, x2, y2);
-				players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-		}
-		else if (undo_command2[0] == 'K') {
-			board.boardSituation[x2][y2]->posY = y1;
-			board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-			board.boardSituation[x2][y2] = NULL;
-			if ((stack[stack.size() - 1])[0] == '0') {
-				board.boardSituation[x2][y2] = new ChessPiece(1, Knight, x2, y2);
-				players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-			else {
-				board.boardSituation[x2][y2] = new ChessPiece(0, Knight, x2, y2);
-				players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-		}
-		else if (undo_command2[0] == 'P') {
-			board.boardSituation[x2][y2]->posX = x1;
-			board.boardSituation[x2][y2]->posY = y1;
-			board.boardSituation[x1][y1] = board.boardSituation[x2][y2];
-			board.boardSituation[x2][y2] = NULL;
-			if ((stack[stack.size() - 1])[0] == '0') {
-				board.boardSituation[x2][y2] = new ChessPiece(1, Pawn, x2, y2);
-				players[1]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-			else {
-				board.boardSituation[x2][y2] = new ChessPiece(0, Pawn, x2, y2);
-				players[0]->OwningPiece.push_back(*(board.boardSituation[x2][y2]));
-				board.boardSituation[x2][y2]->moved++;
-			}
-		}
-	}
+	return true;
 }
 
-void redo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players) {
-	if (stack.size() < 1) { return; }
-	string undo_command = stack[stack.size() - 1].substr(2);
-	if (undo_command == "O-O") {
-		if ((stack[stack.size() - 1])[0] == '0') {
-			board.boardSituation[4][0]->posX = 6;
-			board.boardSituation[6][0] = board.boardSituation[4][0];
-			board.boardSituation[4][0] = NULL;
-			board.boardSituation[6][0]->moved++;
-			board.boardSituation[7][0]->posX = 5;
-			board.boardSituation[5][0] = board.boardSituation[7][0];
-			board.boardSituation[7][0] = NULL;
-			board.boardSituation[5][0]->moved++;
-		}
-		else {
-			board.boardSituation[4][7]->posX = 6;
-			board.boardSituation[6][7] = board.boardSituation[4][7];
-			board.boardSituation[4][7] = NULL;
-			board.boardSituation[6][7]->moved++;
-			board.boardSituation[7][7]->posX = 5;
-			board.boardSituation[5][7] = board.boardSituation[7][7];
-			board.boardSituation[7][7] = NULL;
-			board.boardSituation[5][7]->moved++;
-		}
-		l_log.push_back(stack[stack.size() - 1]);
-		stack.pop_back();
+bool GameManager::checkmate(Player& player, int opponent) {
+	if (stalemate(player) && !Board::board.checkCheck(opponent)) {
+		return true;
 	}
-	else if (undo_command == "O-O-O") {
-		if ((stack[stack.size() - 1])[0] == '0') {
-			board.boardSituation[4][0]->posX = 2;
-			board.boardSituation[2][0] = board.boardSituation[4][0];
-			board.boardSituation[4][0] = NULL;
-			board.boardSituation[2][0]->moved++;
-			board.boardSituation[0][0]->posX = 3;
-			board.boardSituation[3][0] = board.boardSituation[0][0];
-			board.boardSituation[0][0] = NULL;
-			board.boardSituation[3][0]->moved++;
-
-		}
-		else {
-			board.boardSituation[4][7]->posX = 6;
-			board.boardSituation[2][7] = board.boardSituation[4][7];
-			board.boardSituation[4][7] = NULL;
-			board.boardSituation[2][7]->moved++;
-			board.boardSituation[0][7]->posX = 5;
-			board.boardSituation[3][7] = board.boardSituation[0][7];
-			board.boardSituation[0][7] = NULL;
-			board.boardSituation[3][7]->moved++;
-		}
-		l_log.push_back(stack[stack.size() - 1]);
-		stack.pop_back();
-	}
-	else {
-		int x1 = undo_command[0] - '0', y1 = undo_command[2] - '0', x2 = undo_command[4] - '0', y2 = undo_command[6] - '0';
-		string undo_command2 = undo_command.substr(2);
-		if (y2 == 0 || y2 == 7) {//升變
-			if (undo_command2[0] == 'X') {
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				board.boardSituation[x2][y2]->moved++;
-				board.boardSituation[x2][y2]->posX = x2;
-				board.boardSituation[x2][y2]->posY = y2;
-				if (undo_command2[2] == 'Q') {
-					board.boardSituation[x2][y2]->type = Queen;
-				}
-				else if (undo_command2[2] == 'B') {
-					board.boardSituation[x2][y2]->type = Bishop;
-				}
-				else if (undo_command2[2] == 'K') {
-					board.boardSituation[x2][y2]->type = Knight;
-				}
-				else if (undo_command2[2] == 'R') {
-					board.boardSituation[x2][y2]->type = Rook;
-				}
-				l_log.push_back(stack[stack.size() - 1]);
-				stack.pop_back();
-			}
-			else {
-				for (int i = 0; i < 2; i++) {
-					for (int j = 0; j < players[i]->OwningPiece.size(); i++) {
-						if (players[i]->OwningPiece[j].posX == x2 && players[i]->OwningPiece[j].posY == y2) {
-							players[i]->OwningPiece.erase(players[i]->OwningPiece.begin() + j);
-						}
-					}
-				}
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				board.boardSituation[x2][y2]->moved++;
-				board.boardSituation[x2][y2]->posX = x2;
-				board.boardSituation[x2][y2]->posY = y2;
-				if (undo_command2[2] == 'Q') {
-					board.boardSituation[x2][y2]->type = Queen;
-				}
-				else if (undo_command2[2] == 'B') {
-					board.boardSituation[x2][y2]->type = Bishop;
-				}
-				else if (undo_command2[2] == 'K') {
-					board.boardSituation[x2][y2]->type = Knight;
-				}
-				else if (undo_command2[2] == 'R') {
-					board.boardSituation[x2][y2]->type = Rook;
-				}
-				l_log.push_back(stack[stack.size() - 1]);
-				stack.pop_back();
-			}
-		}
-		else if (board.boardSituation[x2][y2] == NULL) {
-			if (undo_command2[0] == 'X' && undo_command2[2] == 'P') {
-				//吃過路兵
-				board.boardSituation[x1][y1]->posX = x2;
-				board.boardSituation[x1][y1]->posY = y2;
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				if (x2 - x1 < 0) {
-					for (int i = 0; i < 2; i++) {
-						for (int j = 0; j < players[i]->OwningPiece.size(); i++) {
-							if (players[i]->OwningPiece[j].posX == x1 - 1 && players[i]->OwningPiece[j].posY == y1) {
-								players[i]->OwningPiece.erase(players[i]->OwningPiece.begin() + j);
-							}
-						}
-					}
-					board.boardSituation[x1 - 1][y1] = NULL;
-				}
-				else {
-					for (int i = 0; i < 2; i++) {
-						for (int j = 0; j < players[i]->OwningPiece.size(); i++) {
-							if (players[i]->OwningPiece[j].posX == x1 + 1 && players[i]->OwningPiece[j].posY == y1) {
-								players[i]->OwningPiece.erase(players[i]->OwningPiece.begin() + j);
-							}
-						}
-					}
-					board.boardSituation[x1 + 1][y1] = NULL;
-				}
-			}
-			else {
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				board.boardSituation[x2][y2]->moved++;
-				l_log.push_back(stack[stack.size() - 1]);
-				stack.pop_back();
-			}
-			l_log.push_back(stack[stack.size() - 1]);
-			stack.pop_back();
-		}
-		else {
-			if ((stack[stack.size() - 1])[0] == 0) {
-				for (int i = 0; i < players[0]->OwningPiece.size(); i++) {
-					if (players[0]->OwningPiece[i].posX == x2 && players[0]->OwningPiece[i].posY == y2) {
-						players[0]->OwningPiece.erase(players[0]->OwningPiece.begin() + i);
-					}
-				}
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				board.boardSituation[x2][y2]->moved++;
-				l_log.push_back(stack[stack.size() - 1]);
-				stack.pop_back();
-			}
-			else {
-				for (int i = 0; i < players[1]->OwningPiece.size(); i++) {
-					if (players[1]->OwningPiece[i].posX == x2 && players[1]->OwningPiece[i].posY == y2) {
-						players[1]->OwningPiece.erase(players[1]->OwningPiece.begin() + i);
-					}
-				}
-				board.boardSituation[x2][y2] = board.boardSituation[x1][y1];
-				board.boardSituation[x1][y1] = NULL;
-				board.boardSituation[x2][y2]->moved++;
-				l_log.push_back(stack[stack.size() - 1]);
-				stack.pop_back();
-			}
-		}
-	}
+	else
+		return false;
 }
