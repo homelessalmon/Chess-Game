@@ -20,7 +20,8 @@ Player::Player(int n) { //n=0 white,1 black
 		OwningPiece.push_back(K);
 	}
 }
-AI_player::AI_player(int n) :Player(n) {}
+HumanPlayer::HumanPlayer(int n) :Player(n) {}
+AIPlayer::AIPlayer(int n) :Player(n) {}
 
 void Player::beCastling(ChessPiece& piece, int x) {
 	Board::board.boardSituation[x][piece.posY] = Board::board.boardSituation[piece.posX][piece.posY];
