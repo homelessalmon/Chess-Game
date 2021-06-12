@@ -12,6 +12,7 @@ public:
 	static Board board;
 	static vector<Board> board_history;
 	static std::stack<Board> stack;
+	static int now_player;
 	ChessPiece* boardSituation[8][8];
 
 	Board();
@@ -27,7 +28,7 @@ public:
 	static void undo();
 	static void redo();
 
-	
+
 	void checkMovable(ChessPiece& piece);
 	bool kingCheck(ChessPiece& piece, int opponent, int x, int y);
 	bool checkCheck(int opponent);
