@@ -16,11 +16,7 @@ Board::Board() {
 Board::Board(const Board& B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (this->boardSituation[i][j] != NULL)
-			{
-				delete this->boardSituation[i][j];
-				this->boardSituation[i][j] = NULL;
-			}
+			this->boardSituation[i][j] = NULL;
 		}
 	}
 	for (int i = 0; i < 8; i++) {
@@ -94,11 +90,7 @@ void Board::redo() {
 void Board::operator=(Board B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (this->boardSituation[i][j] != NULL)
-			{
-				delete this->boardSituation[i][j];
-				this->boardSituation[i][j] = NULL;
-			}
+			this->boardSituation[i][j] = NULL;
 		}
 	}
 	for (int i = 0; i < 8; i++) {
