@@ -1,11 +1,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <fstream>
 #include "Player.h"
-#include "Board.h"
 #include "Viewer.h"
 #include "ChessPiece.h"
-#include <fstream>
 using namespace std;
 typedef class ChessPiece ChessPiece;
 #define TEST 0
@@ -26,12 +25,10 @@ class GameManager {
 public:
 	Player* players[2];
 	int currentPlayer;
-	Board board;
+	//Board board;
 	Viewer viewer;
 	string logTemp;
 	bool check = false;
-	vector<string> stack, l_log;
-	fstream log;
 
 
 	void exe();
@@ -50,6 +47,9 @@ public:
 	static int ImgtoBoradX(Point P); //得出P點對應的棋盤X座標
 	static int ImgtoBoradY(Point P); //得出P點對應的棋盤Y座標
 
+	bool stalemate(Player& player);
+	bool checkmate(Player& player, int opponent);
+
 private:
 	Status status;
 	int pieceNo;
@@ -60,7 +60,3 @@ private:
 	vector<ChessPiece> testPiece;
 #endif // TEST == 1
 };
-
-void undo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players);
-
-void redo(vector<string>& stack, vector<string>& l_log, Board& board, Player** players);
