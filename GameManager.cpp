@@ -6,12 +6,24 @@
 using namespace std;
 using namespace cv;
 
+int Viewer::plateFace;
+
 int GameManager::ImgtoBoradX(Point P) {
-	return (P.x / SIZE - 1);
+	if (Viewer::plateFace == 0) {
+		return (P.x / SIZE - 1);
+	}
+	else {
+		return -(P.x / SIZE - 8);
+	}
 }
 
 int GameManager::ImgtoBoradY(Point P) {
-	return -(P.y / SIZE - 8);
+	if (Viewer::plateFace == 0) {
+		return -(P.y / SIZE - 8);
+	}
+	else {
+		return (P.y / SIZE - 1);
+	}
 }
 
 void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
@@ -22,29 +34,13 @@ void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
 	}
 }
 
-void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* param) {
-	GameManager* self = static_cast<GameManager*>(param);
-	self->doMouseCallbackEnd(event, x, y, flags);
-}
+void GameManager::drawAll() {
 
-void GameManager::done() {
-	renewBoard();
-	Board::board_history.push_back(Board::board);
 	viewer.drawBoard();
 	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
 			viewer.drawChess(players[j]->OwningPiece[i]);
 		}
-	}
-	check = !Board::board.checkCheck(currentPlayer);
-	int opponent;
-	if (currentPlayer == 0) {
-		currentPlayer = 1;
-		opponent = 0;
-	}
-	else {
-		currentPlayer = 0;
-		opponent = 1;
 	}
 	if (check) {
 		for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
@@ -56,15 +52,28 @@ void GameManager::done() {
 	}
 	viewer.drawTurn(currentPlayer);
 	viewer.drawButton(1, 1, 1);
-	if (checkmate(*players[currentPlayer], opponent)) {
-		status = Checkmate;
-		viewer.drawButton(1, 0, 0);
-	}
-	else if (stalemate(*players[currentPlayer])) {
-		status = Stalemate;
-		viewer.drawButton(1, 0, 0);
-	}
 	imshow("Chess Game", viewer.Screen);
+}
+
+void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* param) {
+	GameManager* self = static_cast<GameManager*>(param);
+	self->doMouseCallbackEnd(event, x, y, flags);
+}
+
+void GameManager::done() {
+	renewBoard();
+	Board::board_history.push_back(Board::board);
+	check = !Board::board.checkCheck(currentPlayer);
+	int opponent;
+	if (currentPlayer == 0) {
+		currentPlayer = 1;
+		opponent = 0;
+	}
+	else {
+		currentPlayer = 0;
+		opponent = 1;
+	}
+	drawAll();
 }
 
 void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
@@ -160,12 +169,6 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 				}
 			}
 		}
-		viewer.drawBoard();
-		for (int j = 0; j < 2; j++) {
-			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
-				viewer.drawChess(players[j]->OwningPiece[i]);
-			}
-		}
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == Pawn) {
 			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
 				status = Promoting;
@@ -175,6 +178,12 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			}
 		}
 		status = Standby;
+		viewer.drawBoard();
+		for (int j = 0; j < 2; j++) {
+			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+				viewer.drawChess(players[j]->OwningPiece[i]);
+			}
+		}
 		if (flag) {
 			Board::clear_stack();
 			done();
@@ -217,6 +226,15 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					startY = clickedY + '0';
 				}
 			}
+		}
+		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 1.5 && PointStart.y <= SIZE * 2) {
+			if (Viewer::plateFace == 0) {
+				Viewer::plateFace = 1;
+			}
+			else {
+				Viewer::plateFace = 0;
+			}
+			drawAll();
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
 			//undo
@@ -326,6 +344,8 @@ void GameManager::exe() {
 	if (status == NewGame) {
 		Board::write_init_board();
 		Board::load_board();
+		Viewer::plateFace = 0;
+
 		viewer.drawBoard();
 		for (int i = 0; i < 2; i++) {
 			players[i] = new HumanPlayer(i);
@@ -337,6 +357,7 @@ void GameManager::exe() {
 			}
 		}
 		int undoable = 1, redoable = 1;
+
 		viewer.drawButton(undoable, redoable, 1);
 		currentPlayer = 0;
 		viewer.drawTurn(currentPlayer);
