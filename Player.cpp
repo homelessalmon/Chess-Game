@@ -129,8 +129,12 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 
 	int act, capPos, movePos;
 	act = rand() % 2 + 1; //1:move 2:capture
-	if (piece.capturableX.size() == 0)
+	if (piece.capturableX.size() == 0) {
+		if (piece.movableX.size() == 0) {
+			return false;
+		}
 		act = 1;
+	}
 
 	switch (act) {
 	case 1:
