@@ -111,7 +111,7 @@ void HumanPlayer::promote(ChessPiece& piece, Type type) {
 	piece.type = type;
 }
 
-ChessPiece AIPlayer::choosePiece()
+ChessPiece& AIPlayer::choosePiece()
 {
 	vector<int>available;
 	for (int i = 0; i < OwningPiece.size(); i++) {
