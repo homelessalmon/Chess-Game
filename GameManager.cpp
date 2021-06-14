@@ -318,7 +318,7 @@ void GameManager::exe() {
 	if (status == NewGame) {
 		viewer.drawBoard();
 		for (int i = 0; i < 2; i++) {
-			players[i] = new Player(i);
+			players[i] = new HumanPlayer(i);
 			//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
 		}
 		for (int j = 0; j < 2; j++) {
