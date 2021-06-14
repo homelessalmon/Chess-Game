@@ -18,12 +18,14 @@ public:
 };
 
 class HumanPlayer : public Player {
+public:
 	HumanPlayer(int);
 	bool move(ChessPiece& piece, int x, int y, Player**);
 	void promote(ChessPiece& piece, Type type);
 };
 
 class AIPlayer : public Player {
+public:
 	AIPlayer(int);
 	//bool move(ChessPiece& piece, int x, int y, Player**);
 	//void promote(ChessPiece& piece, Type type);
