@@ -42,6 +42,7 @@ public:
 	void doMouseCallbackMoving(int event, int x, int y, int flags);
 	void doMouseCallbackPromoting(int event, int x, int y, int flags);
 	void doMouseCallbackEnd(int event, int x, int y, int flags);
+	void drawAll();
 	void done();
 	void renewBoard();
 	static int ImgtoBoradX(Point P); //得出P點對應的棋盤X座標
