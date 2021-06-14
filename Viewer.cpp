@@ -37,8 +37,14 @@ void Viewer::drawMenu() {
 
 Point Viewer::BoradtoImg(int x, int y) {
 	Point A;
-	A.x = SIZE * (x + 1);
-	A.y = SIZE * (8 - y);
+	if (Viewer::plateFace == 0) {
+		A.x = SIZE * (x + 1);
+		A.y = SIZE * (8 - y);
+	}
+	else {
+		A.x = SIZE * (8 - x);
+		A.y = SIZE * (y + 1);
+	}
 	return A;
 }
 
@@ -98,30 +104,57 @@ void Viewer::drawBoard() {
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 
 	string letter = "0";
-	for (int i = 0; i < 8; i++) {
-		letter[0] = i + 'a';
-		text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
-		int x = SIZE * (i + 1.5) - text_size.width / 2;
-		int y = SIZE * 9.75;
-		putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	if (Viewer::plateFace == 0) {
+		for (int i = 0; i < 8; i++) {
+			letter[0] = i + 'a';
+			text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+			int x = SIZE * (i + 1.5) - text_size.width / 2;
+			int y = SIZE * 9.75;
+			putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+		}
+		for (int i = 8; i > 0; i--) {
+			letter[0] = i + '0';
+			text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+			int x = SIZE / 4;
+			int y = SIZE * (9.5 - i) + text_size.height / 2;
+			putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+		}
 	}
-	for (int i = 8; i > 0; i--) {
-		letter[0] = i + '0';
-		text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
-		int x = SIZE / 4;
-		int y = SIZE * (9.5 - i) + text_size.height / 2;
-		putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	else {
+		for (int i = 7; i >= 0; i--) {
+			letter[0] = 'h' - i;
+			text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+			int x = SIZE * (i + 1.5) - text_size.width / 2;
+			int y = SIZE * 9.75;
+			putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+		}
+		for (int i = 1; i <= 8; i++) {
+			letter[0] = '9' - i;
+			text_size = getTextSize(letter, 0, font_scale, thickness, &baseline);
+			int x = SIZE / 4;
+			int y = SIZE * (9.5 - i) + text_size.height / 2;
+			putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+		}
 	}
 }
 
 void Viewer::drawButton(int undo, int redo, int FF) {
-	string text = "undo";
+	string text = "REV.";
 	double font_scale = 0.5;
 	int thickness = 1;
 	int baseline;
 	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	int x = SIZE * 9.5 - text_size.width / 2;
-	int y = SIZE * 2.125 + text_size.height;
+	int y = SIZE * 1.125 + text_size.height;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 1.5), Point(SIZE * 9.875, SIZE * 2), Scalar(127, 127, 127), -1);
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 1.5), Point(SIZE * 9.875, SIZE * 2), Scalar(0, 0, 0), thickness);
+
+	text = "undo";
+
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 9.5 - text_size.width / 2;
+	y = SIZE * 2.125 + text_size.height;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 	if (undo == 1) {
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(82, 173, 97), -1);
@@ -133,7 +166,7 @@ void Viewer::drawButton(int undo, int redo, int FF) {
 	x = SIZE * 9.5 - text_size.width / 2;
 	y = SIZE * 3.125 + text_size.height;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
-	if (undo == 1) {
+	if (redo == 1) {
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(82, 173, 97), -1);
 	}
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(0, 0, 0), thickness);
@@ -215,8 +248,15 @@ void Viewer::drawChess(ChessPiece piece) {
 		}
 	}
 	Point A = BoradtoImg(piece.posX, piece.posY);
-	A.x += (SIZE - chessImg.cols) / 2;
-	A.y += (SIZE - chessImg.rows) / 2;
+	if (Viewer::plateFace == 0) {
+		A.x += (SIZE - chessImg.cols) / 2;
+		A.y += (SIZE - chessImg.rows) / 2;
+
+	}
+	else {
+		A.x += (SIZE - chessImg.cols) / 2;
+		A.y += (SIZE - chessImg.rows) / 2;
+	}
 	mergeImg(Screen, chessImg, A);
 }
 
