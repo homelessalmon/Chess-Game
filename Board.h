@@ -26,8 +26,8 @@ public:
 	static void write_init_board();
 	static Board return_now_board();
 	static vector<ChessPiece> return_chess_vector(int _player);
-	static void undo();
-	static void redo();
+	static bool undo();
+	static bool redo();
 
 
 	void checkMovable(ChessPiece& piece);
