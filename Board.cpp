@@ -697,3 +697,41 @@ void Board::checkMovable(ChessPiece& piece) {
 		break;
 	}
 }
+
+bool Board::specific_load_board(string file_name)
+{
+	Board::board_history.clear();
+	ifstream fin(file_name);
+
+	if (fin.is_open())
+	{
+		while (true) {
+			Board tmp;
+			string catch_string;
+			getline(fin, catch_string);
+			if (catch_string == "end")break;
+			while (catch_string != splitLine) {
+				int _player, _type, _posX, _posY, _epc, _epcd, _moved;
+				Type t;
+				stringstream ss;
+				ss.str("");
+				ss.clear();
+				ss << catch_string;
+				ss >> _player >> _type >> _posX >> _posY >> _epc >> _epcd >> _moved;
+				t = static_cast<Type>(_type);
+				ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _epcd, _moved);
+				tmp.boardSituation[_posX][_posY] = tmp_p;
+				getline(fin, catch_string);
+			}
+			board_history.push_back(tmp);
+			if (now_player == 0)now_player = 1;
+			else now_player = 0;
+		}
+		fin.close();
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
