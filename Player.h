@@ -17,15 +17,13 @@ public:
 	void capture(Player& player, int i);
 };
 
-class HumanPlayer : public Player
-{
+class HumanPlayer : public Player {
 	HumanPlayer(int);
 	bool move(ChessPiece& piece, int x, int y, Player**) override;
 	void promote(ChessPiece& piece, Type type) override;
 };
 
-class AIPlayer : public Player
-{
+class AIPlayer : public Player {
 	AIPlayer(int);
 	//bool move(ChessPiece& piece, int x, int y, Player**) override;
 	//void promote(ChessPiece& piece, Type type) override;
