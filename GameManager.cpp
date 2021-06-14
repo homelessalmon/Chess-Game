@@ -311,7 +311,6 @@ void GameManager::mouseCallbackMenu(int event, int x, int y, int flags, void* pa
 }
 
 void GameManager::exe() {
-	Board::load_board();
 	Board::board = Board::return_now_board();
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
@@ -324,6 +323,8 @@ void GameManager::exe() {
 		}
 	}
 	if (status == NewGame) {
+		Board::write_init_board();
+		Board::load_board();
 		viewer.drawBoard();
 		for (int i = 0; i < 2; i++) {
 			players[i] = new HumanPlayer(i);
