@@ -28,6 +28,7 @@ public:
 	static vector<ChessPiece> return_chess_vector(int _player);
 	static bool undo();
 	static bool redo();
+	static void clear_stack();
 
 
 	void checkMovable(ChessPiece& piece);
