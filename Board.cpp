@@ -91,7 +91,7 @@ bool Board::redo() {
 		board = return_now_board();
 		if (now_player == 0)now_player = 1;
 		else now_player = 0;
-		return false;
+		return true;
 	}
 }
 
