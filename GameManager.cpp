@@ -367,8 +367,6 @@ void GameManager::exe() {
 	else if (status = Continue) {
 		exit(0);
 	}
-	int tick = 0;
-	int sec = 0, min = 0;
 	cout << endl;
 	status = Standby;
 	while (status == Standby || status == Moving || status == Promoting) {
@@ -386,26 +384,12 @@ void GameManager::exe() {
 			break;
 		}
 		waitKey(100);
-		tick++;
-		if (tick >= 10) {
-			tick -= 10;
-			sec++;
-			if (sec == 60) {
-				sec = 0;
-				min++;
-			}
-			if (min == 10) {
-				status = Stalemate;
-				currentPlayer = 2;
+		tick[currentPlayer]++;
+		cout << "White: " << tick[0] / 600 << ":" << (tick[0] % 600) / 10 << " | " << "Black: " << tick[1] / 600 << ":" << (tick[1] % 600) / 10 << '\r';
+		if (tick[currentPlayer] == 6000) {
+				status = Checkmate;
 				viewer.drawButton(1, 1, 0);
 				imshow("Chess Game", viewer.Screen);
-			}
-			if (sec < 10) {
-				cout << min << ":0" << sec << '\r';
-			}
-			else {
-				cout << min << ":" << sec << '\r';
-			}
 		}
 	}
 	setMouseCallback("Chess Game", mouseCallbackEnd, this);
