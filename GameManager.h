@@ -13,6 +13,8 @@ enum Status {
 	Menu,
 	NewGame,
 	Continue,
+	Replay,
+	Replaying,
 	Standby,
 	Moving,
 	Promoting,
@@ -30,6 +32,7 @@ public:
 	string logTemp;
 	bool check = false;
 	int tick[2] = { 0 };
+	string filename;
 
 	void exe();
 	static void mouseCallbackMenu(int event, int x, int y, int flags, void* param);
