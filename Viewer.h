@@ -9,6 +9,7 @@ typedef class ChessPiece ChessPiece;
 
 class Viewer {
 public:
+	static int plateFace;
 	Viewer();
 	void drawMenu();
 	void drawBoard(); //繪製棋盤、底板
