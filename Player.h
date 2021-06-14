@@ -7,8 +7,8 @@ typedef class ChessPiece ChessPiece;
 typedef class Player player;
 
 class Player {
+	
 public:
-
 	vector<ChessPiece> OwningPiece;
 	Player(int);
 	virtual bool move(ChessPiece& piece, int x, int y, Player**) = 0;
@@ -18,6 +18,7 @@ public:
 };
 
 class HumanPlayer : public Player {
+
 public:
 	HumanPlayer(int);
 	bool move(ChessPiece& piece, int x, int y, Player**);
@@ -25,6 +26,7 @@ public:
 };
 
 class AIPlayer : public Player {
+
 public:
 	AIPlayer(int);
 	//bool move(ChessPiece& piece, int x, int y, Player**);
