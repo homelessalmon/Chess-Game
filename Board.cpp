@@ -65,18 +65,25 @@ vector<ChessPiece> Board::return_chess_vector(int _player) {
 	return r;
 }
 
-void Board::undo() {
-	if (board_history.size() < 2)return;
+bool Board::undo() {
+	if (board_history.size() < 2)
+	{
+		return false;
+	}
 	stack.push(*(board_history.end() - 1));
 	board_history.erase(board_history.end() - 1);
 	write_board();
 	board = return_now_board();
 	if (now_player == 0)now_player = 1;
 	else now_player = 0;
+	return true;
 }
 
-void Board::redo() {
-	if (stack.size() <= 0)return;
+bool Board::redo() {
+	if (stack.size() <= 0)
+	{
+		return false;
+	}
 	else {
 		board_history.push_back(stack.top());
 		stack.pop();
@@ -84,6 +91,7 @@ void Board::redo() {
 		board = return_now_board();
 		if (now_player == 0)now_player = 1;
 		else now_player = 0;
+		return false;
 	}
 }
 
