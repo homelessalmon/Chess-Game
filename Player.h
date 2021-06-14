@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <cstdlib>
+#include <ctime>
 #include "ChessPiece.h"
 #include "Board.h"
 using namespace std;
@@ -7,7 +9,7 @@ typedef class ChessPiece ChessPiece;
 typedef class Player player;
 
 class Player {
-	
+
 public:
 	vector<ChessPiece> OwningPiece;
 	Player(int);
@@ -29,6 +31,7 @@ class AIPlayer : public Player {
 
 public:
 	AIPlayer(int);
-	//bool move(ChessPiece& piece, int x, int y, Player**);
-	//void promote(ChessPiece& piece, Type type);
+	ChessPiece choosePiece();
+	bool move(ChessPiece& piece, int x, int y, Player**);
+	void promote(ChessPiece& piece, Type type);
 };
