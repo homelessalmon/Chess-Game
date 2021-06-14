@@ -312,14 +312,17 @@ void GameManager::renewBoard() {
 
 void GameManager::domouseCallbackMenu(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
-		if (x >= SIZE && x <= SIZE * 4.5 && y >= SIZE * 7 && y <= SIZE * 8) {
+		if (x >= SIZE && x <= SIZE * 4.5 && y >= SIZE * 5.5 && y <= SIZE * 6.5) {
 			status = NewGame;
 		}
-		else if (x >= SIZE * 5.5 && x <= SIZE * 9 && y >= SIZE * 7 && y <= SIZE * 8) {
+		else if (x >= SIZE * 5.5 && x <= SIZE * 9 && y >= SIZE * 5.5 && y <= SIZE * 6.5) {
 			status = Continue;
 		}
-		else {
-			//
+		else if (x >= SIZE && x <= SIZE * 4.5 && y >= SIZE * 7 && y <= SIZE * 8) {
+			status = Replay;
+		}
+		else if (x >= SIZE * 5.5 && x <= SIZE * 9 && y >= SIZE * 7 && y <= SIZE * 8) {
+			status = End;
 		}
 	}
 }
@@ -330,6 +333,7 @@ void GameManager::mouseCallbackMenu(int event, int x, int y, int flags, void* pa
 }
 
 void GameManager::exe() {
+	system("cls");
 	Board::board = Board::return_now_board();
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
@@ -342,10 +346,21 @@ void GameManager::exe() {
 		}
 	}
 	if (status == NewGame) {
+		int player0, player1;
+		system("cls");
+		cout << "Please Enter White Player's Status. 0 = Human, 1 = AI" << endl;
+		cin >> player0;
+		cout << "Please Enter Black Player's Status. 0 = Human, 1 = AI" << endl;
+		cin >> player1;
+		if (player0 == 1 && player1 == 0) {
+			Viewer::plateFace = 1;
+		}
+		else {
+			Viewer::plateFace = 0;
+		}
+		system("cls");
 		Board::write_init_board();
 		Board::load_board();
-		Viewer::plateFace = 0;
-		system("cls);
 
 		viewer.drawBoard();
 		for (int i = 0; i < 2; i++) {
@@ -364,13 +379,25 @@ void GameManager::exe() {
 		viewer.drawTurn(currentPlayer);
 		imshow("Chess Game", viewer.Screen);
 		renewBoard();
+		status = Standby;
 	}
-	else if (status = Continue) {
+	else if (status == Continue) {
+		//todo
+		cout << "File's Name. :";
+		cin >> filename;
+		status = Standby;
+	}
+	else if (status == Replay) {
+		//todo
+		cout << "File's Name. :";
+		cin >> filename;
+		status = Replaying;
+	}
+	else if (status == End) {
 		exit(0);
 	}
-	cout << endl;
-	status = Standby;
 	while (status == Standby || status == Moving || status == Promoting) {
+
 		switch (status) {
 		case Standby:
 			setMouseCallback("Chess Game", mouseCallbackStandby, this);
@@ -388,10 +415,14 @@ void GameManager::exe() {
 		tick[currentPlayer]++;
 		cout << "White: " << tick[0] / 600 << ":" << (tick[0] % 600) / 10 << " | " << "Black: " << tick[1] / 600 << ":" << (tick[1] % 600) / 10 << '\r';
 		if (tick[currentPlayer] == 6000) {
-				status = Checkmate;
-				viewer.drawButton(1, 1, 0);
-				imshow("Chess Game", viewer.Screen);
+			status = Checkmate;
+			viewer.drawButton(1, 1, 0);
+			imshow("Chess Game", viewer.Screen);
 		}
+
+	}
+	while (status == Replaying) {
+		//todo
 	}
 	setMouseCallback("Chess Game", mouseCallbackEnd, this);
 	waitKey(3000);
@@ -408,7 +439,7 @@ void GameManager::exe() {
 			setMouseCallback("Chess Game", mouseCallbackEnd, this);
 			break;
 		case End:
-			return;
+			exit(0);
 		default:
 			break;
 		}
