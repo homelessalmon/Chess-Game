@@ -29,6 +29,7 @@ void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* par
 
 void GameManager::done() {
 	renewBoard();
+	Board::board_history.push_back(Board::board);
 	viewer.drawBoard();
 	for (int j = 0; j < 2; j++) {
 		for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
