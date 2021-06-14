@@ -21,6 +21,7 @@ public:
 	void operator=(Board);
 	bool operator==(Board);
 	static void load_board();
+	static bool specific_load_board(string file_name);
 	static void write_board();
 	static void write_init_board();
 	static Board return_now_board();
