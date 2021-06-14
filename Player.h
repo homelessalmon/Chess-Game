@@ -20,8 +20,8 @@ public:
 class HumanPlayer : public Player
 {
 	HumanPlayer(int);
-	//bool move(ChessPiece& piece, int x, int y, Player**) override;
-	//void promote(ChessPiece& piece, Type type) override;
+	bool move(ChessPiece& piece, int x, int y, Player**) override;
+	void promote(ChessPiece& piece, Type type) override;
 };
 
 class AIPlayer : public Player
