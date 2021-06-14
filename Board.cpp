@@ -150,13 +150,11 @@ void Board::load_board() {
 	fin.close();
 }
 
-bool Board::specific_load_board(string file_name)
-{
+bool Board::specific_load_board(string file_name) {
 	Board::board_history.clear();
 	ifstream fin(file_name);
 
-	if (fin.is_open())
-	{
+	if (fin.is_open()) {
 		while (true) {
 			Board tmp;
 			string catch_string;
@@ -182,8 +180,7 @@ bool Board::specific_load_board(string file_name)
 		fin.close();
 		return true;
 	}
-	else
-	{
+	else {
 		return false;
 	}
 }
@@ -495,14 +492,14 @@ void Board::checkMovable(ChessPiece& piece) {
 			}
 		}
 		if (piece.moved == 0) {
-			//短
+			//µu
 			if (boardSituation[piece.posX + 3][piece.posY] != nullptr && boardSituation[piece.posX + 1][piece.posY] == nullptr && boardSituation[piece.posX + 2][piece.posY] == nullptr && boardSituation[piece.posX + 3][piece.posY]->type == Rook && boardSituation[piece.posX + 3][piece.posY]->moved == 0) {
 				if (kingCheck(piece, opponent, piece.posX + 2, piece.posY)) {
 					piece.movableX.push_back(piece.posX + 2);
 					piece.movableY.push_back(piece.posY);
 				}
 			}
-			//長
+			//ªø
 			if (boardSituation[piece.posX - 4][piece.posY] != nullptr && boardSituation[piece.posX - 1][piece.posY] == nullptr && boardSituation[piece.posX - 2][piece.posY] == nullptr && boardSituation[piece.posX - 3][piece.posY] == nullptr && boardSituation[piece.posX - 4][piece.posY]->type == Rook && boardSituation[piece.posX - 4][piece.posY]->moved == 0) {
 				if (kingCheck(piece, opponent, piece.posX - 2, piece.posY)) {
 					piece.movableX.push_back(piece.posX - 2);
