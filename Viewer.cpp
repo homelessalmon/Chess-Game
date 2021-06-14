@@ -17,16 +17,31 @@ void Viewer::drawMenu() {
 	int baseline;
 	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	int x = Screen.cols / 2 - text_size.width / 2;
-	int y = Screen.rows / 2 + text_size.height / 2;
+	int y = SIZE * 3 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
-	rectangle(Screen, Point(SIZE * 1, SIZE * 7), Point(SIZE * 4.5, SIZE * 8), Scalar(0, 0, 0), 2);
+	rectangle(Screen, Point(SIZE * 1, SIZE * 5.5), Point(SIZE * 4.5, SIZE * 6.5), Scalar(0, 0, 0), 2);
 	text = "New Game";
 	font_scale = 1;
 	thickness = 1;
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 2.75 - text_size.width / 2;
+	y = SIZE * 6 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+
+	rectangle(Screen, Point(SIZE * 5.5, SIZE * 5.5), Point(SIZE * 9, SIZE * 6.5), Scalar(0, 0, 0), 2);
+	text = "Load";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 7.25 - text_size.width / 2;
+	y = SIZE * 6 + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+
+	rectangle(Screen, Point(SIZE * 1, SIZE * 7), Point(SIZE * 4.5, SIZE * 8), Scalar(0, 0, 0), 2);
+	text = "Replay";
+	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	x = SIZE * 2.75 - text_size.width / 2;
 	y = SIZE * 7.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+
 	rectangle(Screen, Point(SIZE * 5.5, SIZE * 7), Point(SIZE * 9, SIZE * 8), Scalar(0, 0, 0), 2);
 	text = "Exit";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
