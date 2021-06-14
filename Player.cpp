@@ -31,7 +31,11 @@ void Player::beCastling(ChessPiece& piece, int x) {
 	return;
 }
 
-bool Player::move(ChessPiece& piece, int x, int y, Player** players) {
+void Player::capture(Player& player, int i) {
+	player.OwningPiece.erase(player.OwningPiece.begin() + i);
+}
+
+bool HumanPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 	Board::board.checkMovable(piece);
 	for (int i = 0; i < piece.movableX.size(); i++) {
 		if (piece.movableX[i] == x && piece.movableY[i] == y) {
@@ -103,10 +107,6 @@ bool Player::move(ChessPiece& piece, int x, int y, Player** players) {
 	return false;
 }
 
-void Player::capture(Player& player, int i) {
-	player.OwningPiece.erase(player.OwningPiece.begin() + i);
-}
-
-void Player::promote(ChessPiece& piece, Type type) {
+void HumanPlayer::promote(ChessPiece& piece, Type type) {
 	piece.type = type;
 }
