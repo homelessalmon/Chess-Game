@@ -31,7 +31,7 @@ class AIPlayer : public Player {
 
 public:
 	AIPlayer(int);
-	ChessPiece choosePiece();
+	ChessPiece& choosePiece();
 	bool move(ChessPiece& piece, int x, int y, Player**);
 	void promote(ChessPiece& piece, Type type);
 };
