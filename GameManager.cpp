@@ -345,6 +345,7 @@ void GameManager::exe() {
 		Board::write_init_board();
 		Board::load_board();
 		Viewer::plateFace = 0;
+		system("cls);
 
 		viewer.drawBoard();
 		for (int i = 0; i < 2; i++) {
