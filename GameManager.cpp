@@ -176,6 +176,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 		}
 		status = Standby;
 		if (flag) {
+			Board::clear_stack();
 			done();
 		}
 		else {
