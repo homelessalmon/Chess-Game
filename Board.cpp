@@ -741,3 +741,11 @@ void Board::checkMovable(ChessPiece& piece) {
 		break;
 	}
 }
+
+void Board::clear_stack()
+{
+	while (Board::stack.size() > 0)
+	{
+		Board::stack.pop();
+	}
+}
