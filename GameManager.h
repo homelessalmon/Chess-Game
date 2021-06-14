@@ -29,7 +29,7 @@ public:
 	Viewer viewer;
 	string logTemp;
 	bool check = false;
-
+	int tick[2] = { 0 };
 
 	void exe();
 	static void mouseCallbackMenu(int event, int x, int y, int flags, void* param);
