@@ -202,6 +202,25 @@ void Board::write_board(int player1, int time1, int player2, int time2) {
 	fout.close();
 }
 
+void Board::specific_write_board(string file_name, int player1, int time1, int player2, int time2)
+{
+	system(("cd.>" + file_name).c_str());
+	ofstream fout(file_name, ios::trunc);
+	for (int i = 0; i < board_history.size(); i++) {
+		for (int j = 0; j < 8; j++) {
+			for (int k = 0; k < 8; k++) {
+				if (board_history[i].boardSituation[j][k] != NULL) {
+					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << board_history[i].boardSituation[j][k]->epcd << " " << board_history[i].boardSituation[j][k]->moved << endl;
+				}
+			}
+		}
+		fout << splitLine << endl;
+	}
+	fout << "end" << endl;
+	fout << player1 << " " << time1 << " " << player2 << " " << time2;
+	fout.close();
+}
+
 void Board::write_init_board() {
 	ifstream fin("board_history.txt");
 	if (!fin.is_open()) {
