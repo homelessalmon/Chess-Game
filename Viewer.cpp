@@ -48,6 +48,7 @@ void Viewer::drawMenu() {
 	x = SIZE * 7.25 - text_size.width / 2;
 	y = SIZE * 7.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+	cv::imshow("Chess Game", Screen);
 }
 
 Point Viewer::BoradtoImg(int x, int y) {
@@ -151,6 +152,7 @@ void Viewer::drawBoard() {
 			putText(Screen, letter, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
 		}
 	}
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawButton(int replay, int FF) {
@@ -203,6 +205,7 @@ void Viewer::drawButton(int replay, int FF) {
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 8.5), Point(SIZE * 9.875, SIZE * 9), Scalar(82, 173, 97), -1);
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 8.5), Point(SIZE * 9.875, SIZE * 9), Scalar(0, 0, 0), thickness);
 	}
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawTurn(int player) {
@@ -213,6 +216,7 @@ void Viewer::drawTurn(int player) {
 		rectangle(Screen, Point(SIZE * 9.125, SIZE * 4.625), Point(SIZE * 9.875, SIZE * 5.375), Scalar(0, 0, 0), -1);
 	}
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 4.625), Point(SIZE * 9.875, SIZE * 5.375), Scalar(127, 127, 127), 1);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawChess(ChessPiece piece) {
@@ -276,6 +280,7 @@ void Viewer::drawChess(ChessPiece piece) {
 		A.y += (SIZE - chessImg.rows) / 2;
 	}
 	mergeImg(Screen, chessImg, A);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawMovable(Board board, int x, int y) {
@@ -293,6 +298,7 @@ void Viewer::drawMovable(Board board, int x, int y) {
 	}
 	Point B = BoradtoImg(board.boardSituation[x][y]->posX, board.boardSituation[x][y]->posY);
 	rectangle(Screen, B, Point(B.x + SIZE, B.y + SIZE), Scalar(31, 23, 230), 2);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawPromotingTips(int player) {
@@ -357,6 +363,7 @@ void Viewer::drawPromotingTips(int player) {
 		A.y += (SIZE - chessImg.rows) / 2;
 		mergeImg(Screen, chessImg, A);
 	}
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawCheck(ChessPiece piece) {
@@ -364,6 +371,7 @@ void Viewer::drawCheck(ChessPiece piece) {
 	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(31, 23, 176), -1);
 	rectangle(Screen, A, Point(A.x + SIZE, A.y + SIZE), Scalar(0, 0, 0), 1);
 	drawChess(piece);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawCheckmateAnimation(double i, int loser) {
@@ -384,6 +392,7 @@ void Viewer::drawCheckmateAnimation(double i, int loser) {
 	int x = Screen.cols / 2 - text_size.width / 2;
 	int y = SIZE * (i + 0.5) + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawStalemateAnimation(double i, int loser) {
@@ -404,6 +413,7 @@ void Viewer::drawStalemateAnimation(double i, int loser) {
 	int x = Screen.cols / 2 - text_size.width / 2;
 	int y = SIZE * (i + 0.5) + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawCheckmate(int loser) {
@@ -447,6 +457,7 @@ void Viewer::drawCheckmate(int loser) {
 	x = SIZE * 7 - text_size.width / 2;
 	y = SIZE * 5.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	cv::imshow("Chess Game", Screen);
 }
 
 void Viewer::drawStalemate(int loser) {
@@ -488,4 +499,5 @@ void Viewer::drawStalemate(int loser) {
 	x = SIZE * 7 - text_size.width / 2;
 	y = SIZE * 5.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+	cv::imshow("Chess Game", Screen);
 }
