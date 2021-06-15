@@ -246,18 +246,16 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			Board::clear_stack();
 			done();
 		}
-		else {
-			if (check) {
-				for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
-					if (players[currentPlayer]->OwningPiece[i].type == King) {
-						viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
-						break;
-					}
+		if (check) {
+			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+				if (players[currentPlayer]->OwningPiece[i].type == King) {
+					viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+					break;
 				}
 			}
-			viewer.drawTurn(currentPlayer);
-			viewer.drawButton(0, 1);
 		}
+		viewer.drawTurn(currentPlayer);
+		viewer.drawButton(0, 1);
 	}
 }
 
@@ -451,7 +449,12 @@ void GameManager::exe() {
 		int non[4] = { 0 };
 		Board::load_board(non[0], non[1], non[2], non[3]);
 
-
+		if ((playerAI[0] == 1) && (playerAI[1] == 0)) {
+			Viewer::plateFace = 1;
+		}
+		else {
+			Viewer::plateFace = 0;
+		}
 
 		viewer.drawBoard();
 		for (int j = 0; j < 2; j++) {
@@ -489,6 +492,12 @@ void GameManager::exe() {
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
 			players[1]->OwningPiece = Board::return_chess_vector(1);
+			if ((playerAI[0] == 1) && (playerAI[1] == 0)) {
+				Viewer::plateFace = 1;
+			}
+			else {
+				Viewer::plateFace = 0;
+			}
 			viewer.drawBoard();
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
@@ -538,6 +547,12 @@ void GameManager::exe() {
 				players[0]->OwningPiece = Board::return_chess_vector(0);
 				players[1]->OwningPiece = Board::return_chess_vector(1);
 			}
+			if ((playerAI[0] == 1) && (playerAI[1] == 0)) {
+				Viewer::plateFace = 1;
+			}
+			else {
+				Viewer::plateFace = 0;
+			}
 			viewer.drawBoard();
 			for (int j = 0; j < 2; j++) {
 				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
@@ -559,12 +574,7 @@ void GameManager::exe() {
 		exit(0);
 	}
 
-	if ((playerAI[0] == 1) && (playerAI[1] == 0)) {
-		Viewer::plateFace = 1;
-	}
-	else {
-		Viewer::plateFace = 0;
-	}
+
 
 	while (status == Standby || status == Moving || status == Promoting) {
 		if (playerAI[currentPlayer] == 0) {
@@ -605,18 +615,16 @@ void GameManager::exe() {
 					Board::clear_stack();
 					done();
 				}
-				else {
-					if (check) {
-						for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
-							if (players[currentPlayer]->OwningPiece[i].type == King) {
-								viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
-								break;
-							}
+				if (check) {
+					for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+						if (players[currentPlayer]->OwningPiece[i].type == King) {
+							viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+							break;
 						}
 					}
-					viewer.drawTurn(currentPlayer);
-					viewer.drawButton(0, 1);
 				}
+				viewer.drawTurn(currentPlayer);
+				viewer.drawButton(0, 1);
 				break;
 			}
 		}
