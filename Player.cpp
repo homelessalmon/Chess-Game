@@ -54,7 +54,6 @@ bool HumanPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 								break;
 							}
 						}
-						piece.epcd = 1;
 						capture(*players[Board::board.boardSituation[x][y - 1]->player], idx);
 					}
 				}
@@ -68,7 +67,6 @@ bool HumanPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 								break;
 							}
 						}
-						piece.epcd = 1;
 						capture(*players[Board::board.boardSituation[x][y + 1]->player], idx);
 					}
 				}
@@ -103,7 +101,6 @@ bool HumanPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 			return true;
 		}
 	}
-	piece.epcd = 0;
 	return false;
 }
 
@@ -111,8 +108,7 @@ void HumanPlayer::promote(ChessPiece& piece, Type type) {
 	piece.type = type;
 }
 
-ChessPiece& AIPlayer::choosePiece()
-{
+ChessPiece& Player::choosePiece() {
 	vector<int>available;
 	for (int i = 0; i < OwningPiece.size(); i++) {
 		Board::board.checkMovable(OwningPiece[i]);
@@ -120,10 +116,7 @@ ChessPiece& AIPlayer::choosePiece()
 			available.push_back(i);
 		}
 	}
-	int idx;
-	if (available.size()) {
-		rand() % available.size();
-	}
+	int idx = rand() % available.size();
 	return OwningPiece[idx];
 }
 
@@ -174,7 +167,6 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 							break;
 						}
 					}
-					piece.epcd = 1;
 					capture(*players[Board::board.boardSituation[x][y - 1]->player], idx);
 				}
 			}
@@ -188,7 +180,6 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 							break;
 						}
 					}
-					piece.epcd = 1;
 					capture(*players[Board::board.boardSituation[x][y + 1]->player], idx);
 				}
 			}
@@ -222,7 +213,6 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 		}
 		return true;
 	}
-	piece.epcd = 0;
 	return false;
 }
 
