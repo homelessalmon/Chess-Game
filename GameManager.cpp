@@ -218,25 +218,15 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			if (flag == true) {
 				players[currentPlayer]->beCastling(*Board::board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX + 1][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX - 1);
 			}
-
-
 		}
 		else if (players[currentPlayer]->OwningPiece[pieceNo].type == King && players[currentPlayer]->OwningPiece[pieceNo].posX - clickedX == 2) {
 			flag = players[currentPlayer]->move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
 			if (flag == true) {
 				players[currentPlayer]->beCastling(*Board::board.boardSituation[players[currentPlayer]->OwningPiece[pieceNo].posX - 2][players[currentPlayer]->OwningPiece[pieceNo].posY], clickedX + 1);
 			}
-
 		}
 		else {
 			flag = players[currentPlayer]->move(players[currentPlayer]->OwningPiece[pieceNo], clickedX, clickedY, players);
-			if (flag) {
-				char endX = clickedX + '0';
-				char endY = clickedY + '0';
-				if (players[currentPlayer]->OwningPiece[pieceNo].epcd == 1) {
-					players[currentPlayer]->OwningPiece[pieceNo].epcd = 0;
-				}
-			}
 		}
 		if (players[currentPlayer]->OwningPiece[pieceNo].type == Pawn) {
 			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
@@ -494,7 +484,7 @@ void GameManager::exe() {
 				players[1] = new HumanPlayer(1);
 			}
 			else {
-				players[1] = new AIPlayer(0);
+				players[1] = new AIPlayer(1);
 			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
@@ -539,7 +529,7 @@ void GameManager::exe() {
 				players[1] = new HumanPlayer(1);
 			}
 			else {
-				players[1] = new AIPlayer(0);
+				players[1] = new AIPlayer(1);
 			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
@@ -575,18 +565,60 @@ void GameManager::exe() {
 		Viewer::plateFace = 0;
 	}
 	while (status == Standby || status == Moving || status == Promoting) {
-		switch (status) {
-		case Standby:
-			setMouseCallback("Chess Game", mouseCallbackStandby, this);
-			break;
-		case Moving:
-			setMouseCallback("Chess Game", mouseCallbackMoving, this);
-			break;
-		case Promoting:
-			setMouseCallback("Chess Game", mouseCallbackPromoting, this);
-			break;
-		default:
-			break;
+		if (playerAI[currentPlayer] == 0) {
+			switch (status) {
+			case Standby:
+				setMouseCallback("Chess Game", mouseCallbackStandby, this);
+				break;
+			case Moving:
+				setMouseCallback("Chess Game", mouseCallbackMoving, this);
+				break;
+			case Promoting:
+				setMouseCallback("Chess Game", mouseCallbackPromoting, this);
+				break;
+			default:
+				break;
+			}
+		}
+		else {
+			cv::waitKey(500);
+			ChessPiece picked = players[currentPlayer]->choosePiece();
+			switch (status) {
+			case Standby:
+			case Moving:
+			case Promoting:
+				bool flag = players[currentPlayer]->move(picked, 0, 0, players);
+				if (picked.type == Pawn) {
+					if ((currentPlayer == 0 && picked.posY == 7) || (currentPlayer == 1 && picked.posY == 0)) {
+						cv::waitKey(500);
+						players[currentPlayer]->promote(picked, King);
+					}
+				}
+				viewer.drawBoard();
+				for (int j = 0; j < 2; j++) {
+					for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+						viewer.drawChess(players[j]->OwningPiece[i]);
+					}
+				}
+				if (flag) {
+					Board::clear_stack();
+					done();
+				}
+				else {
+					if (check) {
+						for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+							if (players[currentPlayer]->OwningPiece[i].type == King) {
+								viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+								break;
+							}
+						}
+					}
+					viewer.drawTurn(currentPlayer);
+					viewer.drawButton(0, 1);
+				}
+				break;
+				break;
+			}
 		}
 		cv::waitKey(100);
 		tick[currentPlayer]++;
