@@ -138,6 +138,7 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 	else if (piece.capturableX.size() == 0) {
 		act == 1;
 	}
+	int kprev = -999;
 
 	switch (act) {
 	case 1:
@@ -146,14 +147,13 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 		y = piece.movableY[movePos];
 		Board::board.boardSituation[x][y] = Board::board.boardSituation[piece.posX][piece.posY];
 		Board::board.boardSituation[piece.posX][piece.posY] = nullptr;
-		int kprev = -999;
 		if (piece.type == King && abs(piece.posX - x) == 2) {
 			kprev = piece.posX;
 		}
 		piece.posX = x;
 		piece.posY = y;
 		piece.moved++;
-		if (kprev != -999) {
+		if (piece.type == King && abs(kprev - x) == 2) {
 			if ((x - kprev) == 2) {
 				beCastling(*Board::board.boardSituation[piece.posX + 1][piece.posY], x - 1);
 			}
