@@ -333,11 +333,12 @@ void GameManager::mouseCallbackMenu(int event, int x, int y, int flags, void* pa
 }
 
 void GameManager::exe() {
-	system("cls");
+	
 	Board::board = Board::return_now_board();
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
 	imshow("Chess Game", viewer.Screen);
+	system("cls");
 	while (1) {
 		setMouseCallback("Chess Game", mouseCallbackMenu, this);
 		waitKey(100);
