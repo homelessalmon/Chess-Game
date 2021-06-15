@@ -153,7 +153,7 @@ void Viewer::drawBoard() {
 	}
 }
 
-void Viewer::drawButton(int undo, int redo, int FF) {
+void Viewer::drawButton(int replay, int FF) {
 	string text = "REV.";
 	double font_scale = 0.5;
 	int thickness = 1;
@@ -165,28 +165,23 @@ void Viewer::drawButton(int undo, int redo, int FF) {
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 1.5), Point(SIZE * 9.875, SIZE * 2), Scalar(127, 127, 127), -1);
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 1.5), Point(SIZE * 9.875, SIZE * 2), Scalar(0, 0, 0), thickness);
 
-	text = "undo";
-
+	text = replay == 0 ? "undo" : "PREV.";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 9.5 - text_size.width / 2;
 	y = SIZE * 2.125 + text_size.height;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
-	if (undo == 1) {
-		rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(82, 173, 97), -1);
-	}
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(82, 173, 97), -1);
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 2.5), Point(SIZE * 9.875, SIZE * 3), Scalar(0, 0, 0), thickness);
 
-	text = "redo";
+	text = replay == 0 ? "redo" : "NEXT.";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 9.5 - text_size.width / 2;
 	y = SIZE * 3.125 + text_size.height;
 	putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
-	if (redo == 1) {
-		rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(82, 173, 97), -1);
-	}
+	rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(82, 173, 97), -1);
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 3.5), Point(SIZE * 9.875, SIZE * 4), Scalar(0, 0, 0), thickness);
 
-	text = "FF.";
+	text = replay == 0 ? "FF." : "End";
 	text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
 	x = SIZE * 9.5 - text_size.width / 2;
 	y = SIZE * 6.125 + text_size.height;
@@ -199,7 +194,15 @@ void Viewer::drawButton(int undo, int redo, int FF) {
 	}
 	rectangle(Screen, Point(SIZE * 9.125, SIZE * 6.5), Point(SIZE * 9.875, SIZE * 7), Scalar(0, 0, 0), thickness);
 
-
+	if (replay == 0) {
+		text = "save";
+		text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+		x = SIZE * 9.5 - text_size.width / 2;
+		y = SIZE * 8.125 + text_size.height;
+		putText(Screen, text, Point(x, y), 0, font_scale, Scalar(0, 0, 0), thickness);
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 8.5), Point(SIZE * 9.875, SIZE * 9), Scalar(82, 173, 97), -1);
+		rectangle(Screen, Point(SIZE * 9.125, SIZE * 8.5), Point(SIZE * 9.875, SIZE * 9), Scalar(0, 0, 0), thickness);
+	}
 }
 
 void Viewer::drawTurn(int player) {
