@@ -29,9 +29,9 @@ public:
 	int currentPlayer;
 	//Board board;
 	Viewer viewer;
-	string logTemp;
 	bool check = false;
 	int tick[2] = { 0 };
+	int playerAI[2] = { 0 };
 	string filename;
 
 	void exe();
@@ -39,11 +39,13 @@ public:
 	static void mouseCallbackStandby(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackMoving(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackPromoting(int event, int x, int y, int flags, void* param);
+	static void mouseCallbackReplaying(int event, int x, int y, int flags, void* param);
 	static void mouseCallbackEnd(int event, int x, int y, int flags, void* param);
 	void domouseCallbackMenu(int event, int x, int y, int flags);
 	void doMouseCallbackStandby(int event, int x, int y, int flags);
 	void doMouseCallbackMoving(int event, int x, int y, int flags);
 	void doMouseCallbackPromoting(int event, int x, int y, int flags);
+	void doMouseCallbackReplaying(int event, int x, int y, int flags);
 	void doMouseCallbackEnd(int event, int x, int y, int flags);
 	void drawAll();
 	void done();
