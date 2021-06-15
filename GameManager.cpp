@@ -452,7 +452,7 @@ void GameManager::exe() {
 			players[1] = new HumanPlayer(1);
 		}
 		else {
-			players[0] = new AIPlayer(1);
+			players[1] = new AIPlayer(1);
 		}
 
 		system("cls");
