@@ -43,12 +43,6 @@ void GameManager::drawAll() {
 		}
 	}
 	viewer.drawTurn(currentPlayer);
-	if (status == Replaying) {
-		viewer.drawButton(1, 1);
-	}
-	else {
-		viewer.drawButton(0, 1);
-	}
 	cv::imshow("Chess Game", viewer.Screen);
 }
 
@@ -75,13 +69,29 @@ void GameManager::done() {
 	renewBoard();
 	Board::board_history.push_back(Board::board);
 	check = !Board::board.checkCheck(currentPlayer);
+	int opponent;
 	if (currentPlayer == 0) {
+		opponent = 0;
 		currentPlayer = 1;
 	}
 	else {
+		opponent = 1;
 		currentPlayer = 0;
 	}
 	drawAll();
+
+	if (checkmate(*players[currentPlayer], opponent)) {
+		status = Checkmate;
+		viewer.drawButton(0, 0);
+	}
+	else if (stalemate(*players[currentPlayer])) {
+		status = Stalemate;
+		viewer.drawButton(0, 0);
+	}
+	else {
+
+		viewer.drawButton(0, 1);
+	}
 }
 
 void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
@@ -124,6 +134,7 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 				Viewer::plateFace = 0;
 			}
 			drawAll();
+			viewer.drawButton(1, 1);
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
 			//undo
@@ -281,6 +292,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 				Viewer::plateFace = 0;
 			}
 			drawAll();
+			viewer.drawButton(0, 1);
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 2.5 && PointStart.y <= SIZE * 3) {
 			//undo
@@ -399,10 +411,9 @@ void GameManager::exe() {
 	}
 
 	delete players[0], players[1];
-
-
+	system("cls");
 	if (status == NewGame) {
-		system("cls");
+
 		cout << "Please Enter White Player's Status. 0 = Human, 1 = AI" << endl;
 		cin >> playerAI[0];
 		cout << "Please Enter Black Player's Status. 0 = Human, 1 = AI" << endl;
@@ -412,14 +423,14 @@ void GameManager::exe() {
 			players[0] = new HumanPlayer(0);
 		}
 		else {
-			//players[0] = new AIPlayer(0);
+			players[0] = new AIPlayer(0);
 		}
 
 		if (playerAI[1] == 0) {
 			players[1] = new HumanPlayer(1);
 		}
 		else {
-			//players[0] = new AIPlayer(0);
+			players[0] = new AIPlayer(1);
 		}
 
 		system("cls");
@@ -428,11 +439,9 @@ void GameManager::exe() {
 		int non[4] = { 0 };
 		Board::load_board(non[0], non[1], non[2], non[3]);
 
+
+
 		viewer.drawBoard();
-		for (int i = 0; i < 2; i++) {
-			players[i] = new HumanPlayer(i);
-			//這裡可能要多一個是有一方是AI的狀況，目前是兩方都是玩家
-		}
 		for (int j = 0; j < 2; j++) {
 			for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
 				viewer.drawChess(players[j]->OwningPiece[i]);
@@ -448,6 +457,7 @@ void GameManager::exe() {
 	}
 	else if (status == Continue) {
 		//todo
+
 		cout << "File's Name. :" << endl;
 		cin >> filename;
 		filename = "save/" + filename + ".txt";
@@ -468,6 +478,12 @@ void GameManager::exe() {
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
 			players[1]->OwningPiece = Board::return_chess_vector(1);
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
+			}
 			viewer.drawButton(0, 1);
 			currentPlayer = 0;
 			viewer.drawTurn(currentPlayer);
@@ -511,6 +527,12 @@ void GameManager::exe() {
 			while (Board::undo()) {
 				players[0]->OwningPiece = Board::return_chess_vector(0);
 				players[1]->OwningPiece = Board::return_chess_vector(1);
+			}
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
 			}
 			viewer.drawButton(1, 1);
 			currentPlayer = 0;
