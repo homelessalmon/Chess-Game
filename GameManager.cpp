@@ -486,8 +486,6 @@ void GameManager::exe() {
 			}
 			viewer.drawButton(0, 1);
 			currentPlayer = 0;
-			viewer.drawTurn(currentPlayer);
-			cv::imshow("Chess Game", viewer.Screen);
 			renewBoard();
 			status = Standby;
 			if (Board::board_history.size() % 2) {
@@ -496,6 +494,8 @@ void GameManager::exe() {
 			else {
 				currentPlayer = 1;
 			}
+			viewer.drawTurn(currentPlayer);
+			cv::imshow("Chess Game", viewer.Screen);
 		}
 		else {
 			cout << "Can't Open File." << endl;
@@ -540,7 +540,6 @@ void GameManager::exe() {
 			cv::imshow("Chess Game", viewer.Screen);
 			renewBoard();
 			status = Replaying;
-			currentPlayer = 0;
 		}
 		else {
 			cout << "Can't Open File." << endl;
