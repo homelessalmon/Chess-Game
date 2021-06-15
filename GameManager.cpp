@@ -468,6 +468,11 @@ void GameManager::exe() {
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
 			players[1]->OwningPiece = Board::return_chess_vector(1);
+			viewer.drawButton(0, 1);
+			currentPlayer = 0;
+			viewer.drawTurn(currentPlayer);
+			cv::imshow("Chess Game", viewer.Screen);
+			renewBoard();
 			status = Standby;
 			if (Board::board_history.size() % 2) {
 				currentPlayer = 0;
@@ -507,6 +512,11 @@ void GameManager::exe() {
 				players[0]->OwningPiece = Board::return_chess_vector(0);
 				players[1]->OwningPiece = Board::return_chess_vector(1);
 			}
+			viewer.drawButton(1, 1);
+			currentPlayer = 0;
+			viewer.drawTurn(currentPlayer);
+			cv::imshow("Chess Game", viewer.Screen);
+			renewBoard();
 			status = Replaying;
 			currentPlayer = 0;
 		}
