@@ -5,8 +5,6 @@
 #include "ChessPiece.h"
 #include "Board.h"
 using namespace std;
-typedef class ChessPiece ChessPiece;
-typedef class Player player;
 
 class Player {
 
