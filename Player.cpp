@@ -112,13 +112,13 @@ ChessPiece& Player::choosePiece() {
 	vector<int>available;
 	for (int i = 0; i < OwningPiece.size(); i++) {
 		Board::board.checkMovable(OwningPiece[i]);
-		if (OwningPiece[i].capturableX.size() != 0 || OwningPiece[i].capturableX.size() != 0) {
+		if (OwningPiece[i].movableX.size() > 0 || OwningPiece[i].capturableX.size() > 0) {
 			available.push_back(i);
 		}
 	}
-	int idx;
+	int idx = 0;
 	if (available.size()) {
-		rand() % available.size();
+		idx = rand() % available.size();
 	}
 	return OwningPiece[idx];
 }
@@ -131,11 +131,11 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 	if (piece.movableX.size() == 0 && piece.capturableX.size() == 0) {
 		return false;
 	}
-	else if (piece.movableX.size() == 0) {
-		act == 2;
+	if (piece.movableX.size() == 0) {
+		act = 2;
 	}
-	else if (piece.capturableX.size() == 0) {
-		act == 1;
+	if (piece.capturableX.size() == 0) {
+		act = 1;
 	}
 	int kprev = -999;
 
@@ -194,6 +194,7 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 		if (piece.type == Pawn && piece.moved == 1)
 			piece.epc = 1;
 		return true;
+		break;
 	case 2:
 		capPos = rand() % piece.capturableX.size();
 		x = piece.capturableX[capPos];
@@ -215,6 +216,9 @@ bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
 			players[piece.player]->OwningPiece[j].epc = 0;
 		}
 		return true;
+		break;
+	default:
+		return false;
 	}
 	return false;
 }
