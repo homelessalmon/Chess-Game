@@ -456,14 +456,14 @@ void GameManager::exe() {
 				players[0] = new HumanPlayer(0);
 			}
 			else {
-				//players[0] = new AIPlayer(0);
+				players[0] = new AIPlayer(0);
 			}
 
 			if (playerAI[1] == 0) {
 				players[1] = new HumanPlayer(1);
 			}
 			else {
-				//players[0] = new AIPlayer(0);
+				players[0] = new AIPlayer(0);
 			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
@@ -478,6 +478,7 @@ void GameManager::exe() {
 		}
 		else {
 			cout << "Can't Open File." << endl;
+			status = Menu;
 		}
 	}
 	else if (status == Replay) {
@@ -490,14 +491,14 @@ void GameManager::exe() {
 				players[0] = new HumanPlayer(0);
 			}
 			else {
-				//players[0] = new AIPlayer(0);
+				players[0] = new AIPlayer(0);
 			}
 
 			if (playerAI[1] == 0) {
 				players[1] = new HumanPlayer(1);
 			}
 			else {
-				//players[0] = new AIPlayer(0);
+				players[0] = new AIPlayer(0);
 			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
@@ -511,6 +512,7 @@ void GameManager::exe() {
 		}
 		else {
 			cout << "Can't Open File." << endl;
+			status = Menu;
 		}
 	}
 	else if (status == End) {
