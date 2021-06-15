@@ -5,6 +5,5 @@ int main() {
 		GameManager Game;
 		Game.exe();
 	}
-	waitKey(0);
 	return 0;
 }
