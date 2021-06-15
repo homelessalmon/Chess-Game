@@ -519,7 +519,7 @@ void GameManager::exe() {
 		}
 		else {
 			cout << "Can't Open File." << endl;
-			status = Menu;
+			status = End;
 		}
 	}
 	else if (status == Replay) {
@@ -562,7 +562,7 @@ void GameManager::exe() {
 		}
 		else {
 			cout << "Can't Open File." << endl;
-			status = Menu;
+			status = End;
 		}
 	}
 	else if (status == End) {
