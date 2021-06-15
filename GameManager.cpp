@@ -558,12 +558,14 @@ void GameManager::exe() {
 	else if (status == End) {
 		exit(0);
 	}
-	if ((playerAI[0] == 1) && (playerAI[0] == 0)) {
+
+	if ((playerAI[0] == 1) && (playerAI[1] == 0)) {
 		Viewer::plateFace = 1;
 	}
 	else {
 		Viewer::plateFace = 0;
 	}
+
 	while (status == Standby || status == Moving || status == Promoting) {
 		if (playerAI[currentPlayer] == 0) {
 			switch (status) {
@@ -582,16 +584,15 @@ void GameManager::exe() {
 		}
 		else {
 			cv::waitKey(500);
-			ChessPiece picked = players[currentPlayer]->choosePiece();
+			ChessPiece* picked = &players[currentPlayer]->choosePiece();
 			switch (status) {
 			case Standby:
 			case Moving:
 			case Promoting:
-				bool flag = players[currentPlayer]->move(picked, 0, 0, players);
-				if (picked.type == Pawn) {
-					if ((currentPlayer == 0 && picked.posY == 7) || (currentPlayer == 1 && picked.posY == 0)) {
-						cv::waitKey(500);
-						players[currentPlayer]->promote(picked, King);
+				bool flag = players[currentPlayer]->move(*picked, 0, 0, players);
+				if (picked->type == Pawn) {
+					if ((currentPlayer == 0 && picked->posY == 7) || (currentPlayer == 1 && picked->posY == 0)) {
+						players[currentPlayer]->promote(*picked, King);
 					}
 				}
 				viewer.drawBoard();
@@ -616,7 +617,6 @@ void GameManager::exe() {
 					viewer.drawTurn(currentPlayer);
 					viewer.drawButton(0, 1);
 				}
-				break;
 				break;
 			}
 		}
