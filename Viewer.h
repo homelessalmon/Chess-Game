@@ -13,7 +13,7 @@ public:
 	Viewer();
 	void drawMenu();
 	void drawBoard(); //繪製棋盤、底板
-	void drawButton(int undo, int redo, int FF);
+	void drawButton(int replay, int FF);
 	void drawTurn(int player);
 	void drawChess(ChessPiece piece); //繪製piece對應的棋子
 	void drawMovable(Board board, int x, int y); //繪製piece可走的方格
