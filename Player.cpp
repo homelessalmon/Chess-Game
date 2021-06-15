@@ -120,7 +120,7 @@ ChessPiece& Player::choosePiece() {
 	if (available.size()) {
 		idx = rand() % available.size();
 	}
-	return OwningPiece[idx];
+	return OwningPiece[available[idx]];
 }
 
 bool AIPlayer::move(ChessPiece& piece, int x, int y, Player** players) {
