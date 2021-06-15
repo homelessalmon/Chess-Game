@@ -43,7 +43,6 @@ void GameManager::drawAll() {
 		}
 	}
 	viewer.drawTurn(currentPlayer);
-	cv::imshow("Chess Game", viewer.Screen);
 }
 
 void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
@@ -53,8 +52,8 @@ void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
 			cin >> filename;
 			if (filename[0] != '0') {
 				filename = "replay/" + filename + ".txt";
+				Board::specific_write_board(filename, playerAI[0], tick[0], playerAI[1], tick[1]);
 			}
-			Board::specific_write_board(filename, playerAI[0], tick[0], playerAI[1], tick[1]);
 			status = End;
 		}
 	}
@@ -147,7 +146,8 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 						viewer.drawChess(players[j]->OwningPiece[i]);
 					}
 				}
-				viewer.drawButton(0, 1);
+				viewer.drawButton(1, 1);
+				check = !Board::board.checkCheck(currentPlayer);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -155,7 +155,14 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				cv::imshow("Chess Game", viewer.Screen);
+				if (check) {
+					for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+						if (players[currentPlayer]->OwningPiece[i].type == King) {
+							viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+							break;
+						}
+					}
+				}
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
@@ -169,7 +176,8 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 						viewer.drawChess(players[j]->OwningPiece[i]);
 					}
 				}
-				viewer.drawButton(0, 1);
+				viewer.drawButton(1, 1);
+				check = !Board::board.checkCheck(currentPlayer);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -177,15 +185,19 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				cv::imshow("Chess Game", viewer.Screen);
-
+				if (check) {
+					for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+						if (players[currentPlayer]->OwningPiece[i].type == King) {
+							viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+							break;
+						}
+					}
+				}
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
-			//FF.
-			viewer.drawButton(0, 0);
-			cv::imshow("Chess Game", viewer.Screen);
-			status = Checkmate;
+			viewer.drawButton(1, 0);
+			status = End;
 		}
 	}
 }
@@ -230,7 +242,6 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
 				status = Promoting;
 				viewer.drawPromotingTips(currentPlayer);
-				cv::imshow("Chess Game", viewer.Screen);
 				return;
 			}
 		}
@@ -257,7 +268,6 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			viewer.drawTurn(currentPlayer);
 			viewer.drawButton(0, 1);
 		}
-		cv::imshow("Chess Game", viewer.Screen);
 	}
 }
 
@@ -276,7 +286,6 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
 				if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
 					viewer.drawMovable(Board::board, clickedX, clickedY);
-					cv::imshow("Chess Game", viewer.Screen);
 					status = Moving;
 					pieceNo = i;
 					startX = clickedX + '0';
@@ -306,6 +315,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					}
 				}
 				viewer.drawButton(0, 1);
+				check = !Board::board.checkCheck(currentPlayer);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -313,7 +323,14 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				cv::imshow("Chess Game", viewer.Screen);
+				if (check) {
+					for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+						if (players[currentPlayer]->OwningPiece[i].type == King) {
+							viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+							break;
+						}
+					}
+				}
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
@@ -328,6 +345,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					}
 				}
 				viewer.drawButton(0, 1);
+				check = !Board::board.checkCheck(currentPlayer);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -335,14 +353,19 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				cv::imshow("Chess Game", viewer.Screen);
-
+				if (check) {
+					for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
+						if (players[currentPlayer]->OwningPiece[i].type == King) {
+							viewer.drawCheck(players[currentPlayer]->OwningPiece[i]);
+							break;
+						}
+					}
+				}
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
 			//FF.
 			viewer.drawButton(0, 0);
-			cv::imshow("Chess Game", viewer.Screen);
 			status = Checkmate;
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 8.5 && PointStart.y <= SIZE * 9) {
@@ -401,7 +424,6 @@ void GameManager::exe() {
 	system("cls");
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
-	cv::imshow("Chess Game", viewer.Screen);
 	while (1) {
 		setMouseCallback("Chess Game", mouseCallbackMenu, this);
 		cv::waitKey(100);
@@ -451,7 +473,6 @@ void GameManager::exe() {
 		viewer.drawButton(0, 1);
 		currentPlayer = 0;
 		viewer.drawTurn(currentPlayer);
-		cv::imshow("Chess Game", viewer.Screen);
 		renewBoard();
 		status = Standby;
 	}
@@ -495,7 +516,6 @@ void GameManager::exe() {
 				currentPlayer = 1;
 			}
 			viewer.drawTurn(currentPlayer);
-			cv::imshow("Chess Game", viewer.Screen);
 		}
 		else {
 			cout << "Can't Open File." << endl;
@@ -537,7 +557,6 @@ void GameManager::exe() {
 			viewer.drawButton(1, 1);
 			currentPlayer = 0;
 			viewer.drawTurn(currentPlayer);
-			cv::imshow("Chess Game", viewer.Screen);
 			renewBoard();
 			status = Replaying;
 		}
@@ -575,13 +594,12 @@ void GameManager::exe() {
 		if (tick[currentPlayer] == 6000) {
 			status = Checkmate;
 			viewer.drawButton(0, 1);
-			cv::imshow("Chess Game", viewer.Screen);
 		}
-
 	}
 	while (status == Replaying) {
 		//todo
 		setMouseCallback("Chess Game", mouseCallbackReplaying, this);
+		cv::waitKey(100);
 	}
 	setMouseCallback("Chess Game", mouseCallbackEnd, this);
 	cv::waitKey(1000);
@@ -600,7 +618,6 @@ void GameManager::exe() {
 					viewer.drawTurn(currentPlayer);
 					viewer.drawButton(0, 0);
 					viewer.drawCheckmateAnimation(i, currentPlayer);
-					cv::imshow("Chess Game", viewer.Screen);
 					cv::waitKey(50);
 				}
 				animated = 1;
@@ -614,7 +631,6 @@ void GameManager::exe() {
 			viewer.drawTurn(currentPlayer);
 			viewer.drawButton(0, 0);
 			viewer.drawCheckmate(currentPlayer);
-			cv::imshow("Chess Game", viewer.Screen);
 			setMouseCallback("Chess Game", mouseCallbackEnd, this);
 			break;
 		case Stalemate:
@@ -629,7 +645,6 @@ void GameManager::exe() {
 					viewer.drawTurn(currentPlayer);
 					viewer.drawButton(0, 1);
 					viewer.drawStalemateAnimation(i, currentPlayer);
-					cv::imshow("Chess Game", viewer.Screen);
 					cv::waitKey(50);
 				}
 				animated = 1;
@@ -643,7 +658,6 @@ void GameManager::exe() {
 			viewer.drawTurn(currentPlayer);
 			viewer.drawButton(0, 0);
 			viewer.drawStalemate(currentPlayer);
-			cv::imshow("Chess Game", viewer.Screen);
 			setMouseCallback("Chess Game", mouseCallbackEnd, this);
 			break;
 		case End:
