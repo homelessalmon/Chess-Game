@@ -49,15 +49,15 @@ void GameManager::drawAll() {
 	else {
 		viewer.drawButton(0, 1);
 	}
-	imshow("Chess Game", viewer.Screen);
+	cv::imshow("Chess Game", viewer.Screen);
 }
 
 void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
 	if (event == EVENT_LBUTTONUP) {
 		if (x >= SIZE * 6.25 && x <= SIZE * 7.75 && y >= SIZE * 5.25 && y <= SIZE * 5.75) {
-			cout << "Do You Want to Save Replay File? Enter File Name or \"0\" if You Don't Want to Save: " << endl;
+			cout << "GG! Do You Want to Save Replay File? Enter File Name or \"0\" if You Don't Want to Save: " << endl;
 			cin >> filename;
-			if (filename != "0") {
+			if (filename[0] != '0') {
 				filename = "replay/" + filename + ".txt";
 			}
 			Board::specific_write_board(filename, playerAI[0], tick[0], playerAI[1], tick[1]);
@@ -136,7 +136,7 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 						viewer.drawChess(players[j]->OwningPiece[i]);
 					}
 				}
-				viewer.drawButton(1, 1);
+				viewer.drawButton(0, 1);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -144,7 +144,7 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				imshow("Chess Game", viewer.Screen);
+				cv::imshow("Chess Game", viewer.Screen);
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
@@ -158,7 +158,7 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 						viewer.drawChess(players[j]->OwningPiece[i]);
 					}
 				}
-				viewer.drawButton(1, 1);
+				viewer.drawButton(0, 1);
 				if (currentPlayer == 0) {
 					currentPlayer = 1;
 				}
@@ -166,14 +166,14 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				imshow("Chess Game", viewer.Screen);
+				cv::imshow("Chess Game", viewer.Screen);
 
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
 			//FF.
-			viewer.drawButton(1, 1);
-			imshow("Chess Game", viewer.Screen);
+			viewer.drawButton(0, 0);
+			cv::imshow("Chess Game", viewer.Screen);
 			status = Checkmate;
 		}
 	}
@@ -219,7 +219,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			if ((currentPlayer == 0 && players[currentPlayer]->OwningPiece[pieceNo].posY == 7) || (currentPlayer == 1 && players[currentPlayer]->OwningPiece[pieceNo].posY == 0)) {
 				status = Promoting;
 				viewer.drawPromotingTips(currentPlayer);
-				imshow("Chess Game", viewer.Screen);
+				cv::imshow("Chess Game", viewer.Screen);
 				return;
 			}
 		}
@@ -246,7 +246,7 @@ void GameManager::doMouseCallbackMoving(int event, int x, int y, int flags) {
 			viewer.drawTurn(currentPlayer);
 			viewer.drawButton(0, 1);
 		}
-		imshow("Chess Game", viewer.Screen);
+		cv::imshow("Chess Game", viewer.Screen);
 	}
 }
 
@@ -265,7 +265,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 			for (int i = 0; i < players[currentPlayer]->OwningPiece.size(); i++) {
 				if (players[currentPlayer]->OwningPiece[i].posX == clickedX && players[currentPlayer]->OwningPiece[i].posY == clickedY) {
 					viewer.drawMovable(Board::board, clickedX, clickedY);
-					imshow("Chess Game", viewer.Screen);
+					cv::imshow("Chess Game", viewer.Screen);
 					status = Moving;
 					pieceNo = i;
 					startX = clickedX + '0';
@@ -301,7 +301,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				imshow("Chess Game", viewer.Screen);
+				cv::imshow("Chess Game", viewer.Screen);
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 3.5 && PointStart.y <= SIZE * 4) {
@@ -323,14 +323,14 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 					currentPlayer = 0;
 				}
 				viewer.drawTurn(currentPlayer);
-				imshow("Chess Game", viewer.Screen);
+				cv::imshow("Chess Game", viewer.Screen);
 
 			}
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 6.5 && PointStart.y <= SIZE * 7) {
 			//FF.
-			viewer.drawButton(0, 1);
-			imshow("Chess Game", viewer.Screen);
+			viewer.drawButton(0, 0);
+			cv::imshow("Chess Game", viewer.Screen);
 			status = Checkmate;
 		}
 		else if (PointStart.x >= SIZE * 9.125 && PointStart.x <= SIZE * 9.875 && PointStart.y >= SIZE * 8.5 && PointStart.y <= SIZE * 9) {
@@ -389,7 +389,7 @@ void GameManager::exe() {
 	system("cls");
 	namedWindow("Chess Game", WINDOW_AUTOSIZE);
 	viewer.drawMenu();
-	imshow("Chess Game", viewer.Screen);
+	cv::imshow("Chess Game", viewer.Screen);
 	while (1) {
 		setMouseCallback("Chess Game", mouseCallbackMenu, this);
 		cv::waitKey(100);
@@ -397,12 +397,30 @@ void GameManager::exe() {
 			break;
 		}
 	}
+
+	delete players[0], players[1];
+
+
 	if (status == NewGame) {
 		system("cls");
 		cout << "Please Enter White Player's Status. 0 = Human, 1 = AI" << endl;
 		cin >> playerAI[0];
 		cout << "Please Enter Black Player's Status. 0 = Human, 1 = AI" << endl;
 		cin >> playerAI[1];
+
+		if (playerAI[0] == 0) {
+			players[0] = new HumanPlayer(0);
+		}
+		else {
+			//players[0] = new AIPlayer(0);
+		}
+
+		if (playerAI[1] == 0) {
+			players[1] = new HumanPlayer(1);
+		}
+		else {
+			//players[0] = new AIPlayer(0);
+		}
 
 		system("cls");
 		Board::board = Board::return_now_board();
@@ -424,7 +442,7 @@ void GameManager::exe() {
 		viewer.drawButton(0, 1);
 		currentPlayer = 0;
 		viewer.drawTurn(currentPlayer);
-		imshow("Chess Game", viewer.Screen);
+		cv::imshow("Chess Game", viewer.Screen);
 		renewBoard();
 		status = Standby;
 	}
@@ -434,6 +452,19 @@ void GameManager::exe() {
 		cin >> filename;
 		filename = "save/" + filename + ".txt";
 		if (Board::specific_load_board(filename, playerAI[0], tick[0], playerAI[1], tick[1])) {
+			if (playerAI[0] == 0) {
+				players[0] = new HumanPlayer(0);
+			}
+			else {
+				//players[0] = new AIPlayer(0);
+			}
+
+			if (playerAI[1] == 0) {
+				players[1] = new HumanPlayer(1);
+			}
+			else {
+				//players[0] = new AIPlayer(0);
+			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
 			players[1]->OwningPiece = Board::return_chess_vector(1);
@@ -455,6 +486,19 @@ void GameManager::exe() {
 		cin >> filename;
 		filename = "replay/" + filename + ".txt";
 		if (Board::specific_load_board(filename, playerAI[0], tick[0], playerAI[1], tick[1])) {
+			if (playerAI[0] == 0) {
+				players[0] = new HumanPlayer(0);
+			}
+			else {
+				//players[0] = new AIPlayer(0);
+			}
+
+			if (playerAI[1] == 0) {
+				players[1] = new HumanPlayer(1);
+			}
+			else {
+				//players[0] = new AIPlayer(0);
+			}
 			Board::board = Board::return_now_board();
 			players[0]->OwningPiece = Board::return_chess_vector(0);
 			players[1]->OwningPiece = Board::return_chess_vector(1);
@@ -472,7 +516,7 @@ void GameManager::exe() {
 	else if (status == End) {
 		exit(0);
 	}
-	if (playerAI[0] == 1 && playerAI[0] == 0) {
+	if ((playerAI[0] == 1) && (playerAI[0] == 0)) {
 		Viewer::plateFace = 1;
 	}
 	else {
@@ -497,8 +541,8 @@ void GameManager::exe() {
 		cout << "White: " << tick[0] / 600 << ":" << (tick[0] % 600) / 10 << " | " << "Black: " << tick[1] / 600 << ":" << (tick[1] % 600) / 10 << '\r';
 		if (tick[currentPlayer] == 6000) {
 			status = Checkmate;
-			viewer.drawButton(0, 0);
-			imshow("Chess Game", viewer.Screen);
+			viewer.drawButton(0, 1);
+			cv::imshow("Chess Game", viewer.Screen);
 		}
 
 	}
@@ -507,17 +551,66 @@ void GameManager::exe() {
 		setMouseCallback("Chess Game", mouseCallbackReplaying, this);
 	}
 	setMouseCallback("Chess Game", mouseCallbackEnd, this);
-	cv::waitKey(3000);
+	cv::waitKey(1000);
+	int animated = 0;
 	while (1) {
 		switch (status) {
 		case Checkmate:
+			if (animated == 0) {
+				for (double i = 0; i <= 4; i += 0.1) {
+					viewer.drawBoard();
+					for (int j = 0; j < 2; j++) {
+						for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+							viewer.drawChess(players[j]->OwningPiece[i]);
+						}
+					}
+					viewer.drawTurn(currentPlayer);
+					viewer.drawButton(0, 0);
+					viewer.drawCheckmateAnimation(i, currentPlayer);
+					cv::imshow("Chess Game", viewer.Screen);
+					cv::waitKey(50);
+				}
+				animated = 1;
+			}
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
+			}
+			viewer.drawTurn(currentPlayer);
+			viewer.drawButton(0, 0);
 			viewer.drawCheckmate(currentPlayer);
-			imshow("Chess Game", viewer.Screen);
+			cv::imshow("Chess Game", viewer.Screen);
 			setMouseCallback("Chess Game", mouseCallbackEnd, this);
 			break;
 		case Stalemate:
+			if (animated == 0) {
+				for (double i = 0; i <= 4; i += 0.1) {
+					viewer.drawBoard();
+					for (int j = 0; j < 2; j++) {
+						for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+							viewer.drawChess(players[j]->OwningPiece[i]);
+						}
+					}
+					viewer.drawTurn(currentPlayer);
+					viewer.drawButton(0, 1);
+					viewer.drawStalemateAnimation(i, currentPlayer);
+					cv::imshow("Chess Game", viewer.Screen);
+					cv::waitKey(50);
+				}
+				animated = 1;
+			}
+			viewer.drawBoard();
+			for (int j = 0; j < 2; j++) {
+				for (int i = 0; i < players[j]->OwningPiece.size(); i++) {
+					viewer.drawChess(players[j]->OwningPiece[i]);
+				}
+			}
+			viewer.drawTurn(currentPlayer);
+			viewer.drawButton(0, 0);
 			viewer.drawStalemate(currentPlayer);
-			imshow("Chess Game", viewer.Screen);
+			cv::imshow("Chess Game", viewer.Screen);
 			setMouseCallback("Chess Game", mouseCallbackEnd, this);
 			break;
 		case End:
