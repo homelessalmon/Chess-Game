@@ -116,7 +116,10 @@ ChessPiece& Player::choosePiece() {
 			available.push_back(i);
 		}
 	}
-	int idx = rand() % available.size();
+	int idx;
+	if (available.size()) {
+		rand() % available.size();
+	}
 	return OwningPiece[idx];
 }
 
