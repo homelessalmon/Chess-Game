@@ -3,7 +3,6 @@
 vector<Board> Board::board_history;
 std::stack<Board> Board::stack;
 Board Board::board = Board::return_now_board();
-int Board::now_player = 0;
 
 Board::Board() {
 	for (int i = 0; i < 8; i++) {
@@ -72,10 +71,7 @@ bool Board::undo() {
 	}
 	stack.push(*(board_history.end() - 1));
 	board_history.erase(board_history.end() - 1);
-	write_board();
 	board = return_now_board();
-	if (now_player == 0)now_player = 1;
-	else now_player = 0;
 	return true;
 }
 
@@ -87,10 +83,7 @@ bool Board::redo() {
 	else {
 		board_history.push_back(stack.top());
 		stack.pop();
-		write_board();
 		board = return_now_board();
-		if (now_player == 0)now_player = 1;
-		else now_player = 0;
 		return true;
 	}
 }
@@ -122,7 +115,7 @@ bool Board::operator==(Board B) {
 	return true;
 }
 
-void Board::load_board() {
+void Board::load_board(int& player1, int& time1, int& player2, int& time2) {
 	ifstream fin("board_history.txt");
 	if (!fin.is_open()) {
 		Board::write_init_board();
@@ -131,7 +124,6 @@ void Board::load_board() {
 
 	Board::board_history.clear();
 	fin.open("board_history.txt");
-
 
 	while (true) {
 		Board tmp;
@@ -152,13 +144,13 @@ void Board::load_board() {
 			getline(fin, catch_string);
 		}
 		board_history.push_back(tmp);
-		if (now_player == 0)now_player = 1;
-		else now_player = 0;
 	}
+	fin >> player1 >> time1 >> player2 >> time2;
 	fin.close();
+
 }
 
-bool Board::specific_load_board(string file_name) {
+bool Board::specific_load_board(string file_name, int& player1, int& time1, int& player2, int& time2) {
 	Board::board_history.clear();
 	ifstream fin(file_name);
 
@@ -182,9 +174,9 @@ bool Board::specific_load_board(string file_name) {
 				getline(fin, catch_string);
 			}
 			board_history.push_back(tmp);
-			if (now_player == 0)now_player = 1;
-			else now_player = 0;
 		}
+		fin >> player1 >> time1 >> player2 >> time2;
+
 		fin.close();
 		return true;
 	}
@@ -193,7 +185,7 @@ bool Board::specific_load_board(string file_name) {
 	}
 }
 
-void Board::write_board() {
+void Board::write_board(int player1, int time1, int player2, int time2) {
 	ofstream fout("board_history.txt", ios::trunc);
 	for (int i = 0; i < board_history.size(); i++) {
 		for (int j = 0; j < 8; j++) {
@@ -205,7 +197,8 @@ void Board::write_board() {
 		}
 		fout << splitLine << endl;
 	}
-	fout << "end";
+	fout << "end" << endl;
+	fout << player1 << " " << time1 << " " << player2 << " " << time2;
 	fout.close();
 }
 
@@ -245,7 +238,8 @@ void Board::write_init_board() {
 		fout << "1 3 " + to_string(i) + " 7 0 0 0" << endl;
 	}
 	fout << "1 1 3 7 0 0 0" << endl << "1 0 4 7 0 0 0" << endl;
-	fout << splitLine << endl << "end";
+	fout << splitLine << endl << "end" << endl;
+	fout << "0 0 0 0";
 	fout.close();
 }
 
@@ -689,7 +683,6 @@ void Board::checkMovable(ChessPiece& piece) {
 				}
 			}
 		}
-
 
 		if (piece.player == 1) {
 			for (int i = 1; i <= j; i++) {
