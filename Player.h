@@ -13,6 +13,7 @@ public:
 	virtual bool move(ChessPiece& piece, int x, int y, Player**) = 0;
 	virtual void promote(ChessPiece& piece, Type type) = 0;
 	virtual int return_player_type() = 0;
+	ChessPiece& choosePiece();
 	void beCastling(ChessPiece& piece, int x);
 	void capture(Player& player, int i);
 };
@@ -28,7 +29,6 @@ public:
 class AIPlayer : public Player {
 public:
 	AIPlayer(int);
-	ChessPiece& choosePiece();
 	int return_player_type() { return 1; }
 	bool move(ChessPiece& piece, int x, int y, Player**);
 	void promote(ChessPiece& piece, Type type);
