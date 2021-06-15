@@ -366,6 +366,46 @@ void Viewer::drawCheck(ChessPiece piece) {
 	drawChess(piece);
 }
 
+void Viewer::drawCheckmateAnimation(double i, int loser) {
+	Scalar winner;
+	if (loser == 0) {
+		winner = Scalar(0, 0, 0);
+	}
+	else {
+		winner = Scalar(255, 255, 255);
+	}
+	rectangle(Screen, Point(SIZE * 2, SIZE * i), Point(SIZE * 8, SIZE * (2 + i)), Scalar(200, 200, 200), -1);
+	rectangle(Screen, Point(SIZE * 2, SIZE * i), Point(SIZE * 8, SIZE * (2 + i)), winner, 1);
+	string text = "CHECKMATE!";
+	double font_scale = 1.5;
+	int baseline;
+	int thickness = 2;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE * (i + 0.5) + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+}
+
+void Viewer::drawStalemateAnimation(double i, int loser) {
+	Scalar winner;
+	if (loser == 0) {
+		winner = Scalar(0, 0, 0);
+	}
+	else {
+		winner = Scalar(255, 255, 255);
+	}
+	rectangle(Screen, Point(SIZE * 2, SIZE * i), Point(SIZE * 8, SIZE * (2 + i)), Scalar(200, 200, 200), -1);
+	rectangle(Screen, Point(SIZE * 2, SIZE * i), Point(SIZE * 8, SIZE * (2 + i)), winner, 1);
+	string text = "Stalemate";
+	double font_scale = 1.5;
+	int baseline;
+	int thickness = 2;
+	Size text_size = getTextSize(text, 0, font_scale, thickness, &baseline);
+	int x = Screen.cols / 2 - text_size.width / 2;
+	int y = SIZE * (i + 0.5) + text_size.height / 2;
+	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
+}
+
 void Viewer::drawCheckmate(int loser) {
 	Scalar winner;
 	if (loser == 0) {
@@ -384,11 +424,15 @@ void Viewer::drawCheckmate(int loser) {
 	int x = Screen.cols / 2 - text_size.width / 2;
 	int y = SIZE * 4.5 + text_size.height / 2;
 	putText(Screen, text, Point(x, y), 0, font_scale, winner, thickness);
-	if (loser == 0) {
+	switch (loser) {
+	case 0:
 		text = "Black won.";
-	}
-	else {
+		break;
+	case 1:
 		text = "White won.";
+		break;
+	default:
+		break;
 	}
 	font_scale = 1;
 	thickness = 1;
@@ -431,9 +475,6 @@ void Viewer::drawStalemate(int loser) {
 	}
 	else if (loser == 0) {
 		text = "White can't move.";
-	}
-	else {
-		text = "Time's up.";
 	}
 	font_scale = 0.5;
 	thickness = 1;
