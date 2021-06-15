@@ -21,7 +21,7 @@ Board::Board(const Board& B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if (B.boardSituation[i][j] != NULL) {
-				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->epcd, B.boardSituation[i][j]->moved);
+				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->moved);
 				this->boardSituation[i][j] = tmp;
 			}
 		}
@@ -65,8 +65,7 @@ vector<ChessPiece> Board::return_chess_vector(int _player) {
 }
 
 bool Board::undo() {
-	if (board_history.size() < 2)
-	{
+	if (board_history.size() < 2) {
 		return false;
 	}
 	stack.push(*(board_history.end() - 1));
@@ -76,8 +75,7 @@ bool Board::undo() {
 }
 
 bool Board::redo() {
-	if (stack.size() <= 0)
-	{
+	if (stack.size() <= 0) {
 		return false;
 	}
 	else {
@@ -97,7 +95,7 @@ void Board::operator=(Board B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if (B.boardSituation[i][j] != NULL) {
-				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->epcd, B.boardSituation[i][j]->moved);
+				ChessPiece* tmp = new ChessPiece(B.boardSituation[i][j]->player, B.boardSituation[i][j]->type, B.boardSituation[i][j]->posX, B.boardSituation[i][j]->posY, B.boardSituation[i][j]->epc, B.boardSituation[i][j]->moved);
 				this->boardSituation[i][j] = tmp;
 			}
 		}
@@ -107,7 +105,7 @@ void Board::operator=(Board B) {
 bool Board::operator==(Board B) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if (this->boardSituation[i][j]->player != B.boardSituation[i][j]->player || this->boardSituation[i][j]->type != B.boardSituation[i][j]->type || this->boardSituation[i][j]->posX != B.boardSituation[i][j]->posX || this->boardSituation[i][j]->posY != B.boardSituation[i][j]->posY || this->boardSituation[i][j]->epc != B.boardSituation[i][j]->epc || this->boardSituation[i][j]->epcd != B.boardSituation[i][j]->epcd || this->boardSituation[i][j]->moved != B.boardSituation[i][j]->moved) {
+			if (this->boardSituation[i][j]->player != B.boardSituation[i][j]->player || this->boardSituation[i][j]->type != B.boardSituation[i][j]->type || this->boardSituation[i][j]->posX != B.boardSituation[i][j]->posX || this->boardSituation[i][j]->posY != B.boardSituation[i][j]->posY || this->boardSituation[i][j]->epc != B.boardSituation[i][j]->epc || this->boardSituation[i][j]->moved != B.boardSituation[i][j]->moved) {
 				return false;
 			}
 		}
@@ -131,15 +129,15 @@ void Board::load_board(int& player1, int& time1, int& player2, int& time2) {
 		getline(fin, catch_string);
 		if (catch_string == "end")break;
 		while (catch_string != splitLine) {
-			int _player, _type, _posX, _posY, _epc, _epcd, _moved;
+			int _player, _type, _posX, _posY, _epc, _moved;
 			Type t;
 			stringstream ss;
 			ss.str("");
 			ss.clear();
 			ss << catch_string;
-			ss >> _player >> _type >> _posX >> _posY >> _epc >> _epcd >> _moved;
+			ss >> _player >> _type >> _posX >> _posY >> _epc >> _moved;
 			t = static_cast<Type>(_type);
-			ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _epcd, _moved);
+			ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _moved);
 			tmp.boardSituation[_posX][_posY] = tmp_p;
 			getline(fin, catch_string);
 		}
@@ -161,15 +159,15 @@ bool Board::specific_load_board(string file_name, int& player1, int& time1, int&
 			getline(fin, catch_string);
 			if (catch_string == "end")break;
 			while (catch_string != splitLine) {
-				int _player, _type, _posX, _posY, _epc, _epcd, _moved;
+				int _player, _type, _posX, _posY, _epc, _moved;
 				Type t;
 				stringstream ss;
 				ss.str("");
 				ss.clear();
 				ss << catch_string;
-				ss >> _player >> _type >> _posX >> _posY >> _epc >> _epcd >> _moved;
+				ss >> _player >> _type >> _posX >> _posY >> _epc >> _moved;
 				t = static_cast<Type>(_type);
-				ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _epcd, _moved);
+				ChessPiece* tmp_p = new ChessPiece(_player, t, _posX, _posY, _epc, _moved);
 				tmp.boardSituation[_posX][_posY] = tmp_p;
 				getline(fin, catch_string);
 			}
@@ -191,7 +189,7 @@ void Board::write_board(int player1, int time1, int player2, int time2) {
 		for (int j = 0; j < 8; j++) {
 			for (int k = 0; k < 8; k++) {
 				if (board_history[i].boardSituation[j][k] != NULL) {
-					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << board_history[i].boardSituation[j][k]->epcd << " " << board_history[i].boardSituation[j][k]->moved << endl;
+					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << " " << board_history[i].boardSituation[j][k]->moved << endl;
 				}
 			}
 		}
@@ -202,15 +200,14 @@ void Board::write_board(int player1, int time1, int player2, int time2) {
 	fout.close();
 }
 
-void Board::specific_write_board(string file_name, int player1, int time1, int player2, int time2)
-{
+void Board::specific_write_board(string file_name, int player1, int time1, int player2, int time2) {
 	system(("cd.>" + file_name).c_str());
 	ofstream fout(file_name, ios::trunc);
 	for (int i = 0; i < board_history.size(); i++) {
 		for (int j = 0; j < 8; j++) {
 			for (int k = 0; k < 8; k++) {
 				if (board_history[i].boardSituation[j][k] != NULL) {
-					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << board_history[i].boardSituation[j][k]->epcd << " " << board_history[i].boardSituation[j][k]->moved << endl;
+					fout << board_history[i].boardSituation[j][k]->player << " " << static_cast<int>(board_history[i].boardSituation[j][k]->type) << " " << board_history[i].boardSituation[j][k]->posX << " " << board_history[i].boardSituation[j][k]->posY << " " << board_history[i].boardSituation[j][k]->epc << " " << " " << board_history[i].boardSituation[j][k]->moved << endl;
 				}
 			}
 		}
@@ -264,7 +261,7 @@ void Board::write_init_board() {
 
 bool Board::kingCheck(ChessPiece& piece, int opponent, int x, int y) {
 	Board tmp;
-	ChessPiece* tmp_p = new ChessPiece(piece.player, piece.type, x, y, piece.epc, piece.epcd, piece.moved);
+	ChessPiece* tmp_p = new ChessPiece(piece.player, piece.type, x, y, piece.epc, piece.moved);
 	tmp = *this;
 	tmp.boardSituation[piece.posX][piece.posY] = nullptr;
 	tmp.boardSituation[x][y] = tmp_p;
@@ -754,10 +751,8 @@ void Board::checkMovable(ChessPiece& piece) {
 	}
 }
 
-void Board::clear_stack()
-{
-	while (Board::stack.size() > 0)
-	{
+void Board::clear_stack() {
+	while (Board::stack.size() > 0) {
 		Board::stack.pop();
 	}
 }
