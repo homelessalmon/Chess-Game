@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <fstream> 
+#include <fstream>
 #include <sstream>
 #include <stack>
 #include "ChessPiece.h"
@@ -12,7 +12,6 @@ public:
 	static Board board;
 	static vector<Board> board_history;
 	static std::stack<Board> stack;
-	static int now_player;
 	ChessPiece* boardSituation[8][8];
 
 	Board();
@@ -20,9 +19,9 @@ public:
 	~Board();
 	void operator=(Board);
 	bool operator==(Board);
-	static void load_board();
-	static bool specific_load_board(string file_name);
-	static void write_board();
+	static void load_board(int& player1, int& time1, int& player2, int& time2);
+	static bool specific_load_board(string file_name, int& player1, int& time1, int& player2, int& time2);
+	static void write_board(int player1, int time1, int player2, int time2);
 	static void write_init_board();
 	static Board return_now_board();
 	static vector<ChessPiece> return_chess_vector(int _player);
@@ -30,9 +29,7 @@ public:
 	static bool redo();
 	static void clear_stack();
 
-
 	void checkMovable(ChessPiece& piece);
 	bool kingCheck(ChessPiece& piece, int opponent, int x, int y);
 	bool checkCheck(int opponent);
 };
-
