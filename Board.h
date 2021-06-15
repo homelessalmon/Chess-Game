@@ -23,6 +23,7 @@ public:
 	static bool specific_load_board(string file_name, int& player1, int& time1, int& player2, int& time2);
 	static void write_board(int player1, int time1, int player2, int time2);
 	static void write_init_board();
+	static void specific_write_board(string file_name, int player1, int time1, int player2, int time2);
 	static Board return_now_board();
 	static vector<ChessPiece> return_chess_vector(int _player);
 	static bool undo();
