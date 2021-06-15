@@ -26,14 +26,6 @@ int GameManager::ImgtoBoradY(Point P) {
 	}
 }
 
-void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
-	if (event == EVENT_LBUTTONUP) {
-		if (x >= SIZE * 6.25 && x <= SIZE * 7.75 && y >= SIZE * 5.25 && y <= SIZE * 5.75) {
-			status = End;
-		}
-	}
-}
-
 void GameManager::drawAll() {
 
 	viewer.drawBoard();
@@ -58,6 +50,20 @@ void GameManager::drawAll() {
 		viewer.drawButton(0, 1);
 	}
 	imshow("Chess Game", viewer.Screen);
+}
+
+void GameManager::doMouseCallbackEnd(int event, int x, int y, int flags) {
+	if (event == EVENT_LBUTTONUP) {
+		if (x >= SIZE * 6.25 && x <= SIZE * 7.75 && y >= SIZE * 5.25 && y <= SIZE * 5.75) {
+			cout << "Do You Want to Save Replay File? Enter File Name or \"0\" if You Don't Want to Save: " << endl;
+			cin >> filename;
+			if (filename != "0") {
+				filename = "replay/" + filename + ".txt";
+			}
+			Board::specific_write_board(filename, playerAI[0], tick[0], playerAI[1], tick[1]);
+			status = End;
+		}
+	}
 }
 
 void GameManager::mouseCallbackEnd(int event, int x, int y, int flags, void* param) {
@@ -98,6 +104,11 @@ void GameManager::doMouseCallbackPromoting(int event, int x, int y, int flags) {
 		status = Standby;
 		done();
 	}
+}
+
+void GameManager::mouseCallbackPromoting(int event, int x, int y, int flags, void* param) {
+	GameManager* self = static_cast<GameManager*>(param);
+	self->doMouseCallbackPromoting(event, x, y, flags);
 }
 
 void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
@@ -166,13 +177,6 @@ void GameManager::doMouseCallbackReplaying(int event, int x, int y, int flags) {
 			status = Checkmate;
 		}
 	}
-}
-
-
-
-void GameManager::mouseCallbackPromoting(int event, int x, int y, int flags, void* param) {
-	GameManager* self = static_cast<GameManager*>(param);
-	self->doMouseCallbackPromoting(event, x, y, flags);
 }
 
 void GameManager::mouseCallbackReplaying(int event, int x, int y, int flags, void* param) {
@@ -333,6 +337,7 @@ void GameManager::doMouseCallbackStandby(int event, int x, int y, int flags) {
 			cout << "Please Enter File's Name: " << endl;
 			cin >> filename;
 			filename = "save/" + filename + ".txt";
+			Board::specific_write_board(filename, playerAI[0], tick[0], playerAI[1], tick[1]);
 			status = End;
 		}
 	}
